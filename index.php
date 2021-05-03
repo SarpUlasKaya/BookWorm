@@ -8,7 +8,7 @@
     function checkForEmptyField() {
 	var errorMsg = "";
 	if ( document.getElementById('username').value == "" ) {
-	    errorMsg += "Please fill out the Username field. \n";
+	    errorMsg += "gg nice work. \n";
 	}
 	if ( document.getElementById('passwd').value == "" ) {
 	    errorMsg += "Please fill out the Password field. \n";
