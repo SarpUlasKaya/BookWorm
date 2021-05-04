@@ -16,17 +16,16 @@
     you are reading and sharing your thoughts on those books with others!
     To use Bookworm, please log in using your e-mail and password
   </h4>
-  <form class="button" action="login.php" method="post" onsubmit="return checkForEmptyLoginField()">
-    <label>Username: <input type="text" id="loginUsername" name="name" /></label> <br><br>
-    <label>Password: <input type="password" id="loginPasswd" name="password" /></label><br><br>
-    <input style="margin-bottom: 5px" type="submit" name="submit" value="Login"/>
+  <form class="button" action="login.php" method="post" name="Login" onsubmit=" return checkForEmptyLoginField()">
+    <label>Email: <input type="text" name="email"/></label> <br><br>
+    <label>Password: <input type="password" name="password"/></label><br><br>
+    <input type="submit" name="loginSubmit" value="Submit"/>
   </form>
-
   <form class="button" action="signup.php" method="post">
     <h4>
       Don't have an account? Join us!
     </h4>
-    <input style="margin-bottom: 5px" type="submit" name="submit" value="Sign Up"/>
+    <input style="margin-bottom: 5px" type="submit" name="signUpSubmit" value="Sign Up"/>
   </form>
 </div>
 

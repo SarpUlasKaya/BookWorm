@@ -80,6 +80,7 @@ require_once('config.php')
                       }
                       break;
               }
+              header("location: listbooks.php");
           }
       }
       ?>
