@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>
+    WelcomeToBookWorm
+  </title>
+</head>
+<body>
+<div class="align-content-lg-center" style="background-image: url('/img/welcomePageBG.jpg');">
+  <h1>
+    Welcome to Bookworm!
+  </h1>
+  <h4>
+    Bookworm is an onlinne platform for tracking your progress on the books
+    you are reading and sharing your thoughts on those books with others!
+    To use Bookworm, please log in using your e-mail and password
+  </h4>
+  <form class="button" action="login.php" method="post" onsubmit="return checkForEmptyLoginField()">
+    <label>Username: <input type="text" id="loginUsername" name="name" /></label> <br><br>
+    <label>Password: <input type="password" id="loginPasswd" name="password" /></label><br><br>
+    <input style="margin-bottom: 5px" type="submit" name="submit" value="Login"/>
+  </form>
+
+  <form class="button" action="signup.php" method="post">
+    <h4>
+      Don't have an account? Join us!
+    </h4>
+    <input style="margin-bottom: 5px" type="submit" name="submit" value="Sign Up"/>
+  </form>
+</div>
+
+</body>
+</html>
+
+<script>
+  function checkForEmptyLoginField() {
+    var errorMsg = "";
+    if ( document.getElementById('loginUsername').value == "" ) {
+      errorMsg += "Please fill out the Username field. \n";
+    }
+    if ( document.getElementById('loginPasswd').value == "" ) {
+      errorMsg += "Please fill out the Password field. \n";
+    }
+    if ( errorMsg != "" ) {
+      alert(errorMsg);
+      return false;
+    }
+    return true;
+  }
+</script>
+
+<style>
+  .button {
+    position:static;
+    display: block;
+    width: 50%;
+    border: 2px;
+    background-color: blanchedalmond;
+    color: cornflowerblue;
+    font-size: 24px;
+    cursor: pointer;
+    text-align: center;
+    border-radius: 12px;
+    transition-duration: 0.3s;
+  }
+  .button:hover {
+    background:#f0f9eb;
+    border-color:#c2e7b0;
+    color:#67c23a
+  }
+</style>
