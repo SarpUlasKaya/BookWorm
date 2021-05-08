@@ -39,8 +39,6 @@
 		// if search is done using only search by name
 		$listSql = "SELECT * FROM books";
 		
-		
-		
 		if( isset($_POST['Search']))
 		{
 			// for checking if the fields are empty

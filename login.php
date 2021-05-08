@@ -13,7 +13,7 @@ $query = " select * from users where mail_address='$email' and password='$passwo
 
 if($result = $mysqli->query($query)) {
     if($result->num_rows==1) {
-        header("location: listbooks.php");
+        header("location: mainMenu.php");
     }
     else{
         echo "<script>
