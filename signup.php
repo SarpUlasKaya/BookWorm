@@ -1,6 +1,7 @@
-<?php
-require_once('config.php')
-?>
+ <?php
+      session_start();
+      include("config.php");
+      ?>
 <DOCTYPE! html>
 <html>
 <head>
@@ -26,20 +27,12 @@ require_once('config.php')
           if ( !empty($firstname) && !empty($surname) && !empty($email) && !empty($password) &&
               !empty($passwordConfirm) && !empty($birthday) && !empty($gender) && ($password == $passwordConfirm) ) {
 
-              /*
-              $query = "INSERT INTO users( user_id, name, mail_address, password, last_login,
-                                 created_at, birthday, gender ) VALUES (LAST_INSERT_ID(), ?, ?, ?, ?, ?, ?, ?)";
-              $stmtinsert = $mysqli->prepare($query);
-              $stmtinsert->bind_param($name, $email, $password, $current_date, $current_date,
-                                        $birthday, $gender);
-              $result = $stmtinsert->execute();
-              */
-
               $name = $firstname;
               $name .= " ";
               $name .= $surname;
-              $query = "INSERT INTO users( user_id, name, mail_address, password, last_login,
-                                 created_at, birthday, gender ) VALUES (LAST_INSERT_ID(),'$name', '$email',
+
+              $query = "INSERT INTO users(name, mail_address, password, last_login,
+                                 created_at, birthday, gender ) VALUES ('$name', '$email',
                                                                         '$password', NOW(), NOW(),
                                                                         '$birthday', '$gender')";
               $stmtinsert = $mysqli->prepare($query);
@@ -48,6 +41,11 @@ require_once('config.php')
               if($result) {
                   echo 'Successfully inserted new user.';
               }
+              $getUserIDQuery = $mysqli->query("SELECT user_id FROM users ORDER BY user_id DESC LIMIT 1");
+              $row = $getUserIDQuery->fetch_assoc();
+              $_SESSION['kkk'] = $row['user_id'];
+              echo "Signup user ID: " . $row['user_id'] . "\r\n";
+
               switch ($_POST['accountType']) {
                   case 'librarian' :
                       echo 'librarian';

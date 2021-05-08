@@ -1,6 +1,7 @@
-<?php
-require_once('config.php')
-?>
+ <?php
+    session_start();
+    include("config.php");
+    ?>
 <DOCTYPE! html>
 <html>
 <head>
@@ -37,21 +38,35 @@ require_once('config.php')
             }
 
             //GET LAST INSERTED BOOK ID
-            $lastBookID = "SELECT book_id FROM books ORDER BY book_id DESC LIMIT 1";
-            $getlastbookid = $mysqli->prepare($lastBookID);
-            $resultBookID = $getlastbookid->execute();
-            $getlastbookid->close();
-            if($resultBookID) {
+            $lastBookRow = $mysqli->query("SELECT book_id FROM books ORDER BY book_id DESC LIMIT 1");
+            $row = $lastBookRow->fetch_assoc();
+            $lastBookID = $row['book_id'];
+            if($lastBookID) {
                 echo 'Successfully get last book ID';
             }
 
+            //ADD EDITION OF BOOK TO EDITION TABLE
             $queryEdition = "INSERT INTO edition( book_id, edition_no, publisher, publishing_year, language, translator, like_count, dislike_count, comment_count, format) 
-                            VALUES ('$resultBookID', '$editionNo', '$publisher', '$publishYear', '$language', '$translator', 0, 0, 0, '$format')";
+                            VALUES ('$lastBookID', '$editionNo', '$publisher', '$publishYear', '$language', '$translator', 0, 0, 0, '$format')";
             $editionInsert = $mysqli->prepare($queryEdition);
             $resultEditionInsert = $editionInsert->execute();
             $editionInsert->close();
             if ($resultEditionInsert) {
                 echo 'Successfully inserted new edition';
+            }
+
+            //ADD PUBLISHER-BOOK TUPLE TO PUBLISHES RELATION
+            $authorID = $_SESSION['kkk'];
+            echo "Author id: " . $authorID . "\r\n";
+            echo "Book id:" . $lastBookID . "\r\n";
+
+            $queryPublishes = "INSERT INTO publishes( book_id, author_id) 
+                            VALUES ('$lastBookID', '$authorID')";
+            $publishesInsert = $mysqli->prepare($queryPublishes);
+            $resultPublishesInsert = $publishesInsert->execute();
+            $publishesInsert->close();
+            if ($resultPublishesInsert) {
+                echo 'Successfully inserted new publishes relation';
             }
         }
     }
