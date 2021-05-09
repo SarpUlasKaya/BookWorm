@@ -43,7 +43,7 @@
               }
               $getUserIDQuery = $mysqli->query("SELECT user_id FROM users ORDER BY user_id DESC LIMIT 1");
               $row = $getUserIDQuery->fetch_assoc();
-              $_SESSION['kkk'] = $row['user_id'];
+              $_SESSION['userID'] = $row['user_id'];
               echo "Signup user ID: " . $row['user_id'] . "\r\n";
 
               switch ($_POST['accountType']) {
