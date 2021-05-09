@@ -99,7 +99,7 @@
             while( $row = mysqli_fetch_assoc($result))
             {
                 echo "<tr>
-                        <td><a href=\"bookDetails.php\">".$row['title']."</a></td>
+                        <td><a href=\"bookDetails.php?bookId=" . urlencode($row['book_id']) ."\">".$row['title']."</a></td>
                         <td>".$row['year']."</td>
                         <td>".$row['genre']."</td>
                         <td>".$row['book_id']."</td>
