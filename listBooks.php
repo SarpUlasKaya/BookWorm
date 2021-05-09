@@ -85,15 +85,40 @@
         }
         $result = mysqli_query($mysqli, $listSql);
         $resultCheck = mysqli_num_rows( $result);
-
+        echo"<h2>Results</h2>
+            <p>To add a caption to a table, use the caption tag.</p>
+            <table style=\"width:50%\">
+            <tr>
+                <th>Book Name</th>
+                <th>Year</th>          
+                <th>Genre</th>
+                <th>ID</th>    
+            </tr>";
         if( $resultCheck > 0)
         {
             while( $row = mysqli_fetch_assoc($result))
             {
-                echo "Book ID: ". $row['book_id'] . "|| Book Year: " . $row['year'] . "|| Book Title: " . $row['title'] . "|| Book Genre: ". $row['genre'] . "<br>";
+                echo "<tr>
+                        <td><a href=\"listBooks.php\">".$row['title']."</a></td>
+                        <td>".$row['year']."</td>
+                        <td>".$row['genre']."</td>
+                        <td>".$row['book_id']."</td>
+                    </tr>
+              ";
             }
+            echo "</table>";
         }
     }
     ?>
 </body>
 </html>
+<style>
+    table, th, td {
+        border: 1px solid black;
+        border-collapse: collapse;
+    }
+    th, td {
+        padding: 5px;
+        text-align: left;
+    }
+</style>
