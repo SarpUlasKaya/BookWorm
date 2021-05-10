@@ -64,21 +64,32 @@ $authorName = ($mysqli->query("SELECT name FROM users WHERE user_id = '$authorID
 if( isset($_POST['like'])) {
     //search if rates relation already exists
     $getRatesInfoQuery = "SELECT * FROM edition INNER JOIN rates_book ON rates_book.book_id = edition.book_id
-                            WHERE edition.book_id = '$bookID' AND edition.edition_no = '$editionNO' AND edition.publisher = '$bookEditionPublisher' AND rates_book.user_id = '$userID' AND rates_book.is_like = true";
-    $getRatesInfoQueryResult = $mysqli->query($getRatesInfoQuery);
-    if($getRatesInfoQueryResult->num_rows==1) {
+                            WHERE edition.book_id = '$bookID' AND edition.edition_no = '$editionNO' AND edition.publisher = '$bookEditionPublisher' AND rates_book.user_id = '$userID'";
+    $getRatesInfoLikeQueryResult = $mysqli->query($getRatesInfoQuery . " AND rates_book.is_like = true");
+    if($getRatesInfoLikeQueryResult->num_rows==1) {
         echo "You have already liked this book.";
     }
     else{
-        //add new rates relation and increase book like count by 1
-        $getRatesInfoQueryRow = $getRatesInfoQueryResult->fetch_assoc();
-        $insertRatesQuery = "INSERT INTO rates_book(user_id, , password, last_login,
-                                 created_at, birthday, gender ) VALUES ('$name', '$email',
-                                                                        '$password', NOW(), NOW(),
-                                                                        '$birthday', '$gender')";
-        $stmtinsert = $mysqli->prepare($query);
-        $result = $stmtinsert->execute();
-        $stmtinsert->close();
+        //Check if user previously disliked book
+        $getRatesInfoDislikeQueryResult = $mysqli->query($getRatesInfoQuery . " AND rates_book.is_like = false");
+        if($getRatesInfoDislikeQueryResult->num_rows==1) {
+            echo " You have disliked this book previously";
+            //Update previously disliked rates relation as like
+            $getRatesInfoDislikeQueryRow = $getRatesInfoDislikeQueryResult->fetch_assoc();
+            $getRatesInfoDislikeQueryRow['is_like'] = true;
+            //Decrease book dislike count
+            $getBookInfoQueryRow['dislike_count'] = $getBookInfoQueryRow['dislike_count'] - 1;
+        }
+        else {
+            //add new rates relation
+            $insertRatesQuery = "INSERT INTO rates_book(user_id, book_id, edition_no, publishes, is_like) 
+                                VALUES ('$userID', '$bookID', '$editionNO', '$bookEditionPublisher', true)";
+            $insertRatesQueryPrep = $mysqli->prepare($insertRatesQuery);
+            $insertRatesQueryResult = $insertRatesQueryPrep->execute();
+            $insertRatesQueryPrep->close();
+        }
+        //increase book like count by 1
+        $getBookInfoQueryRow['like_count'] = $getBookInfoQueryRow['like_count'] + 1;
     }
 }
 if( isset($_POST['dislike'])) {
