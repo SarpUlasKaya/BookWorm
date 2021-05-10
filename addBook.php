@@ -23,6 +23,7 @@
         $publishYear = $_POST['publishYear'];
         $language = $_POST['language'];
         $translator = $_POST['translator'];
+        $totalPageCount = $_POST['totalPageCount'];
         $format = $_POST['format'];
 
         if ( !empty($bookTitle) && !empty($year) && !empty($genre) && !empty($summary) &&
@@ -87,8 +88,8 @@
                         else {
                             //ADD EDITION OF BOOK TO EDITION TABLE
                             $lastBookID = $_SESSION['bookID'];
-                            $queryEdition = "INSERT INTO edition( book_id, edition_no, publisher, publishing_year, language, translator, like_count, dislike_count, comment_count, format) 
-                            VALUES ('$lastBookID', '$editionNo', '$publisher', '$publishYear', '$language', '$translator', 0, 0, 0, '$format')";
+                            $queryEdition = "INSERT INTO edition( book_id, edition_no, publisher, publishing_year, language, translator, like_count, dislike_count, comment_count, page_count, format) 
+                            VALUES ('$lastBookID', '$editionNo', '$publisher', '$publishYear', '$language', '$translator', 0, 0, 0, '$totalPageCount', '$format')";
                             $editionInsert = $mysqli->prepare($queryEdition);
                             $resultEditionInsert = $editionInsert->execute();
                             $editionInsert->close();
@@ -154,6 +155,12 @@
                id="translator"
                name="translator"
                placeholder="Translator"
+               style="margin-top: 5px;">
+        <br></br>
+        <input type="number"
+               id="totalPageCount"
+               name="totalPageCount"
+               placeholder="Total Page Count"
                style="margin-top: 5px;">
         <br></br>
         <input type="text"

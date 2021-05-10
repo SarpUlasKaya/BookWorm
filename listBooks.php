@@ -32,7 +32,7 @@
 		
 	<?php
     // if search is done using only search by name
-    $listSql = "SELECT * FROM books";
+    $listSql = "SELECT * FROM books INNER JOIN edition ON books.book_id = edition.book_id";
 
     if( isset($_POST['Search']))
     {
@@ -87,22 +87,28 @@
         $resultCheck = mysqli_num_rows( $result);
         echo"<h2>Results</h2>
             <p>To add a caption to a table, use the caption tag.</p>
-            <table style=\"width:50%\">
+            <table style=\"width:75%\">
             <tr>
                 <th>Book Name</th>
                 <th>Year</th>          
                 <th>Genre</th>
-                <th>ID</th>    
+                <th>ID</th> 
+                <th>Edition No</th>
+                <th>Publisher</th>   
+                <th>Page Count</th>   
             </tr>";
         if( $resultCheck > 0)
         {
             while( $row = mysqli_fetch_assoc($result))
             {
                 echo "<tr>
-                        <td><a href=\"bookDetails.php?bookId=" . urlencode($row['book_id']) ."\">".$row['title']."</a></td>
+                        <td><a href=\"bookDetails.php?bookId=" . urlencode($row['book_id']) . "&editionNo=" . urlencode($row['edition_no']) . "&publisher=" . urlencode($row['publisher']) . "\">".$row['title']."</a></td>
                         <td>".$row['year']."</td>
                         <td>".$row['genre']."</td>
                         <td>".$row['book_id']."</td>
+                        <td>".$row['edition_no']."</td>
+                        <td>".$row['publisher']."</td>
+                        <td>".$row['page_count']."</td>
                     </tr>
               ";
             }
