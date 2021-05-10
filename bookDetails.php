@@ -6,7 +6,7 @@ $bookID = $_GET["bookId"];
 $editionNO = $_GET["editionNo"];
 $bookEditionPublisher = $_GET["publisher"];
 $userID = $_SESSION['userID'];
-echo "BOOK ID: " . $bookID . " Edition NO: " . $editionNO . "Publisher: " . $bookEditionPublisher . " USER ID: " . $userID . "\r\n";
+//echo "BOOK ID: " . $bookID . " Edition NO: " . $editionNO . "Publisher: " . $bookEditionPublisher . " USER ID: " . $userID . "\r\n";
 if( isset($_POST['newPageCountSubmit'])) {
     $newCurrentPageNum = $_POST['newCurrentPageNum'];
     //Mark new Progress
@@ -16,7 +16,7 @@ if( isset($_POST['newPageCountSubmit'])) {
     $markProgressQueryResult = $markProgressQueryPrep->execute();
     $markProgressQueryPrep->close();
     if ($markProgressQueryResult) {
-        echo 'Successfully inserted new mark_progress.';
+        //echo 'Successfully inserted new mark_progress.';
     }
 }
 //get mark_progress table
@@ -37,8 +37,8 @@ if($getPageInfoQueryRow['current_page']){
 }
 
 $totalPageNum = $getPageInfoQueryRow['page_count'];
-echo "Current Page = " . $currentPageNum;
-echo "Total page = " . $totalPageNum;
+//echo "Current Page = " . $currentPageNum;
+//echo "Total page = " . $totalPageNum;
 
 ?>
 
@@ -48,38 +48,60 @@ echo "Total page = " . $totalPageNum;
     <title>MarkProgressPage</title>
 </head>
 <body align = \"CENTER\">
-<h1>
-    YOUR PROGRESS
-</h1>
-<p> You are currently at page <?php echo "$currentPageNum ";
-                                if($totalPageNum) {
-                                    echo "of $totalPageNum ";
-                                }
-                              ?>
-</p>
-<table>
-    <tr>
-        <th>Progress Mark Date</th>
-        <th>Page No</th>
-    </tr>
-    <?php
-    if( $getMPTableRowNum > 0) {
-        while ($getMPTableRow = mysqli_fetch_assoc($getMPTableResult)) {
-            echo "<tr>
+<div style="width: 49%; position: absolute; top: 0px; right: 0px;">
+    <h1>
+        YOUR PROGRESS
+    </h1>
+    <p> You are currently at page <?php echo "$currentPageNum ";
+        if($totalPageNum) {
+            echo "of $totalPageNum ";
+        }
+        ?>
+    </p>
+    <table>
+        <tr>
+            <th>Progress Mark Date</th>
+            <th>Page No</th>
+        </tr>
+        <?php
+        if( $getMPTableRowNum > 0) {
+            while ($getMPTableRow = mysqli_fetch_assoc($getMPTableResult)) {
+                echo "<tr>
                     <td>" . $getMPTableRow['progress_date'] . "</td>
                     <td>" . $getMPTableRow['current_page'] . "</td>
                   </tr>";
+            }
         }
-    }
-    ?>
-</table>
-<br></br>
-<label>Enter Current Page Number: </label>
-<form method="post">
-    <input name="newCurrentPageNum" type="number"/>
-    <input type="submit" name="newPageCountSubmit" value="Submit"/>
-</form>
+        ?>
+    </table>
+    <br></br>
+    <label>Enter Current Page Number: </label>
+    <form method="post">
+        <input name="newCurrentPageNum" type="number"/>
+        <input type="submit" name="newPageCountSubmit" value="Submit"/>
+    </form>
 
+</div>
+<div style="width: 49%; position: absolute; top: 0px; left: 200px;">
+    <td>Author : author alıcaz</td>
+    <br></br>
+    <td>Genre : <?php echo $detailResult["genre"]?></td>
+    <br></br>
+    <td>Year : <?php echo $detailResult["year"]?></td>
+    <br></br>
+    <td>Edition : edition alıcaz</td>
+    <br></br>
+    <td>Publisher : publisher alıcaz</td>
+    <br></br>
+    <td>Publication Year : publisher alıcaz</td>
+    <br></br>
+    <td>Language : publisher alıcaz</td>
+    <br></br>
+    <td>Translator : publisher alıcaz</td>
+    <br></br>
+    <td>Summary : <?php echo $detailResult["summary"]?></td>
+    <br></br>
+</div>
 </body>
 </html>
 <style>
