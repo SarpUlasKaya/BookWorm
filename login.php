@@ -14,7 +14,7 @@ $query = " select user_id from users where mail_address='$email' and password='$
 if($result = $mysqli->query($query)) {
     if($result->num_rows==1) {
         $row = $result->fetch_assoc();
-        $_SESSION['kkk'] = $row['user_id'];
+        $_SESSION['userID'] = $row['user_id'];
         echo $row['user_id'];
         header("location: mainMenu.php");
     }
