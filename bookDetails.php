@@ -24,11 +24,18 @@ $getMPTable = "SELECT * FROM mark_progress INNER JOIN edition ON mark_progress.b
                             WHERE mark_progress.book_id = '$bookID' AND edition.edition_no = '$editionNO' AND edition.publisher = '$bookEditionPublisher' AND mark_progress.user_id = '$userID' ORDER BY progress_date DESC";
 $getMPTableResult = mysqli_query($mysqli, $getMPTable);
 $getMPTableRowNum = mysqli_num_rows( $getMPTableResult);
+
 //get Last mark_progress tuple
 $getPageInfoQuery = "$getMPTable" ." LIMIT 1";
 $getPageInfoQueryResult = $mysqli->query($getPageInfoQuery);
 $getPageInfoQueryRow = $getPageInfoQueryResult->fetch_assoc();
-$currentPageNum = $getPageInfoQueryRow['current_page'];
+
+if($getPageInfoQueryRow['current_page']){
+    $currentPageNum = $getPageInfoQueryRow['current_page'];
+} else {
+    $currentPageNum = 0;
+}
+
 $totalPageNum = $getPageInfoQueryRow['page_count'];
 echo "Current Page = " . $currentPageNum;
 echo "Total page = " . $totalPageNum;
@@ -44,7 +51,12 @@ echo "Total page = " . $totalPageNum;
 <h1>
     YOUR PROGRESS
 </h1>
-<p> You are currently at page <?php echo "$currentPageNum "; ?> of <?php echo "$totalPageNum "; ?> </p>
+<p> You are currently at page <?php echo "$currentPageNum ";
+                                if($totalPageNum) {
+                                    echo "of $totalPageNum ";
+                                }
+                              ?>
+</p>
 <table>
     <tr>
         <th>Progress Mark Date</th>

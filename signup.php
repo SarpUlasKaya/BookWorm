@@ -24,61 +24,74 @@
           $passwordConfirm = $_POST['confirmPassword'];
           $birthday = $_POST['birthday'];
           $gender = $_POST['gender'];
-          if ( !empty($firstname) && !empty($surname) && !empty($email) && !empty($password) &&
-              !empty($passwordConfirm) && !empty($birthday) && !empty($gender) && ($password == $passwordConfirm) ) {
 
-              $name = $firstname;
-              $name .= " ";
-              $name .= $surname;
+          //Search if such user already exists
+          $searchUserQuery = "select user_id from users where mail_address = '$email' and password = '$password'";
+          if($searchUserQueryResult = $mysqli->query($searchUserQuery)) {
+              if($searchUserQueryResult->num_rows==1) {
+                  echo "<script>
+                            alert('User Exists');
+                            window.location.href='signup.php';
+                        </script>";
+              }
+              else{
+                  echo"Entered else";
+                  if ( !empty($firstname) && !empty($surname) && !empty($email) && !empty($password) &&
+                      !empty($passwordConfirm) && !empty($birthday) && !empty($gender) && ($password == $passwordConfirm) ) {
 
-              $query = "INSERT INTO users(name, mail_address, password, last_login,
+                      $name = $firstname;
+                      $name .= " ";
+                      $name .= $surname;
+                      $query = "INSERT INTO users(name, mail_address, password, last_login,
                                  created_at, birthday, gender ) VALUES ('$name', '$email',
                                                                         '$password', NOW(), NOW(),
                                                                         '$birthday', '$gender')";
-              $stmtinsert = $mysqli->prepare($query);
-              $result = $stmtinsert->execute();
-              $stmtinsert->close();
-              if($result) {
-                  echo 'Successfully inserted new user.';
-              }
-              $getUserIDQuery = $mysqli->query("SELECT user_id FROM users ORDER BY user_id DESC LIMIT 1");
-              $row = $getUserIDQuery->fetch_assoc();
-              $_SESSION['userID'] = $row['user_id'];
-              echo "Signup user ID: " . $row['user_id'] . "\r\n";
+                      $stmtinsert = $mysqli->prepare($query);
+                      $result = $stmtinsert->execute();
+                      $stmtinsert->close();
+                      if($result) {
+                          echo 'Successfully inserted new user.';
+                      }
+                      $getUserIDQuery = $mysqli->query("SELECT user_id FROM users ORDER BY user_id DESC LIMIT 1");
+                      $row = $getUserIDQuery->fetch_assoc();
+                      $_SESSION['userID'] = $row['user_id'];
+                      echo "Signup user ID: " . $row['user_id'] . "\r\n";
 
-              switch ($_POST['accountType']) {
-                  case 'librarian' :
-                      echo 'librarian';
-                      $libQuery = "INSERT INTO librarian_account( user_id ) SELECT user_id FROM users ORDER BY user_id DESC LIMIT 1";
-                      $stmtinsert = $mysqli->prepare($libQuery);
-                      $result = $stmtinsert->execute();
-                      $stmtinsert->close();
-                      if ($result) {
-                          echo 'Successfully inserted new librarian.';
+                      switch ($_POST['accountType']) {
+                          case 'librarian' :
+                              echo 'librarian';
+                              $libQuery = "INSERT INTO librarian_account( user_id ) SELECT user_id FROM users ORDER BY user_id DESC LIMIT 1";
+                              $stmtinsert = $mysqli->prepare($libQuery);
+                              $result = $stmtinsert->execute();
+                              $stmtinsert->close();
+                              if ($result) {
+                                  echo 'Successfully inserted new librarian.';
+                              }
+                              break;
+                          case 'author' :
+                              echo 'author';
+                              $autQuery = "INSERT INTO author_account( user_id ) SELECT user_id FROM users ORDER BY user_id DESC LIMIT 1";
+                              $stmtinsert = $mysqli->prepare($autQuery);
+                              $result = $stmtinsert->execute();
+                              $stmtinsert->close();
+                              if ($result) {
+                                  echo 'Successfully inserted new author.';
+                              }
+                              break;
+                          case 'reader' :
+                              echo 'reader';
+                              $readQuery = "INSERT INTO reader_account( user_id ) SELECT user_id FROM users ORDER BY user_id DESC LIMIT 1";
+                              $stmtinsert = $mysqli->prepare($readQuery);
+                              $result = $stmtinsert->execute();
+                              $stmtinsert->close();
+                              if ($result) {
+                                  echo 'Successfully inserted new reader.';
+                              }
+                              break;
                       }
-                      break;
-                  case 'author' :
-                      echo 'author';
-                      $autQuery = "INSERT INTO author_account( user_id ) SELECT user_id FROM users ORDER BY user_id DESC LIMIT 1";
-                      $stmtinsert = $mysqli->prepare($autQuery);
-                      $result = $stmtinsert->execute();
-                      $stmtinsert->close();
-                      if ($result) {
-                          echo 'Successfully inserted new author.';
-                      }
-                      break;
-                  case 'reader' :
-                      echo 'reader';
-                      $readQuery = "INSERT INTO reader_account( user_id ) SELECT user_id FROM users ORDER BY user_id DESC LIMIT 1";
-                      $stmtinsert = $mysqli->prepare($readQuery);
-                      $result = $stmtinsert->execute();
-                      $stmtinsert->close();
-                      if ($result) {
-                          echo 'Successfully inserted new reader.';
-                      }
-                      break;
+                      header("location: mainMenu.php");
+                  }
               }
-              header("location: mainMenu.php");
           }
       }
       ?>
