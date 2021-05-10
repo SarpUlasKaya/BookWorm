@@ -75,8 +75,10 @@
                 }
                 $bookID = $_SESSION['bookID'];
                 echo "test 1";
+                //Check if the author trying to add a new edition of an existing is same with the original book publisher
                 if ($authorRow && $authorRow['author_id'] == $_SESSION['userID']) {
                     echo "test 2";
+                    //SEARCH IF EDITION ALREADY EXISTS
                     $queryIsEditionExists = " select book_id, edition_no, publisher from edition where book_id = '$bookID' and edition_no = '$editionNo' and publisher = '$publisher'";
                     if($isEditionExist = $mysqli->query($queryIsEditionExists)) {
                         if($isEditionExist->num_rows==1) {
