@@ -8,8 +8,9 @@
             <img  style="position: relative; max-height: 80px; max-width: 80px;" src="img/logo.png">
             <ul>
                 <li>
-                    <a style="margin-left: 10px; display: inline-block; color: darkgrey;text-decoration: navajowhite;" href="listBooks.php">Search Book</a>
+                    <a style="margin-left: 10px; display: inline-block; color: darkgrey;text-decoration: navajowhite;" href="searchBooks.php">Search Book</a>
                     <a style="margin-left: 10px; display: inline-block; color: darkgrey;text-decoration: navajowhite;" href="addBook.php">Add Book</a>
+                    <a style="margin-left: 10px; display: inline-block; color: darkgrey;text-decoration: navajowhite;" href="myLibrary.php">My Library</a>
                     <a style="margin-left: 10px; display: inline-block; color: darkgrey;text-decoration: navajowhite;" href="#">Create Request</a>
                 </li>
             </ul>

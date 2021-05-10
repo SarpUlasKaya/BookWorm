@@ -103,6 +103,7 @@
                 }
             }
         }
+        //header("location: addBook.php");
     }
     ?>
 </div>
