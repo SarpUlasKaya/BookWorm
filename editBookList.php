@@ -41,8 +41,10 @@ $getBookListNameQueryResult = $mysqli->query($getBookListNameQuery);
 $getBookListNameQueryRow = $getBookListNameQueryResult->fetch_assoc();
 $bookListName = $getBookListNameQueryRow['name'];
 
-
-
+//Get book infos inside book_list
+$getBookInfosInList = "SELECT * FROM member_of INNER JOIN books ON member_of.book_id = books.book_id WHERE  member_of.book_list_id = '$bookListID'";
+$getBookInfosInListResult = mysqli_query($mysqli, $getBookInfosInList);
+$getBookInfosInListRowCount = mysqli_num_rows( $getBookInfosInListResult);
 ?>
 <!DOCTYPE html>
 <html>
@@ -51,7 +53,34 @@ $bookListName = $getBookListNameQueryRow['name'];
 </head>
 <body align = "LEFT">
 <div style="width: 49%; position: absolute; top: 0px; left: 150px;">
-    <p> BOOK LIST NAME: <?php echo"$bookListName";?> </p>
+    <h1><?php echo"$bookListName";?></h1>
+    <label>Books In This List:</label>
+    <table style="width:55%;">
+        <tr>
+            <th>Book Name</th>
+            <th>Year</th>
+            <th>Genre</th>
+            <th>ID</th>
+            <th>Edition No</th>
+            <th>Publisher</th>
+        </tr>
+        <?php
+        if( $getBookInfosInListRowCount > 0)
+        {
+            while( $getBookInfosInListRow = mysqli_fetch_assoc($getBookInfosInListResult))
+            {
+                echo "<tr>
+                          <td>".$getBookInfosInListRow['title']."</td>
+                          <td>".$getBookInfosInListRow['year']."</td>
+                          <td>".$getBookInfosInListRow['genre']."</td>
+                          <td>".$getBookInfosInListRow['book_id']."</td>
+                          <td>".$getBookInfosInListRow['edition_no']."</td>
+                          <td>".$getBookInfosInListRow['publisher']."</td>
+                      </tr>";
+            }
+            echo "</table>";
+        }
+        ?>
 </div>
 <div style="width: 49%; position: absolute; top: 0px; left: 750px;">
     <form action = "" method = "POST">
