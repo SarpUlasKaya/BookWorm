@@ -5,13 +5,43 @@ include("config.php");
 $bookListID = $_GET['bookListId'];
 $userID = $_SESSION['userID'];
 
-//Get book list name
+if (!empty($_GET['bookToAddId']) && !empty($_GET['bookToAddEditionNo']) && !empty($_GET['bookToAddPublisher'])) {
+    $bookToAddID = $_GET['bookToAddId'];
+    $bookToAddEditionNo = $_GET['bookToAddEditionNo'];
+    $bookToAddPublisher = $_GET['bookToAddPublisher'];
+    //echo "ID of book to add: " . $bookToAddID . ", edition of book to add: " . $bookToAddEditionNo .
+    //    ", publisher of book to add: " . $bookToAddPublisher;
+
+    //Search if book exists in member_of
+    $searchMemberOfQuery = "SELECT * FROM member_of WHERE member_of.book_id = '$bookToAddID' AND member_of.edition_no = '$bookToAddEditionNo'
+                          AND member_of.publisher = '$bookToAddPublisher' AND member_of.book_list_id = '$bookListID'";
+    $searchMemberOfQueryResult = $mysqli->query($searchMemberOfQuery);
+    if ( $searchMemberOfQueryResult->num_rows == 1) {
+        echo "This book is already added.";
+    }
+    else {
+        //Add member_of relation
+        $insertMemberOfQuery = "INSERT INTO member_of (book_list_id, book_id, edition_no, publisher)
+                            VALUES ( '$bookListID', '$bookToAddID', '$bookToAddEditionNo', '$bookToAddPublisher')";
+        $insertMemberOfQueryPrep = $mysqli->prepare($insertMemberOfQuery);
+        $insertMemberOfQueryResult = $insertMemberOfQueryPrep->execute();
+        $insertMemberOfQueryPrep->close();
+        //Increase book list's book count
+        $increaseBookCountQuery = "UPDATE book_list SET book_count = book_count + 1 WHERE book_list.book_list_id = '$bookListID'";
+        $increaseBookCountQueryPrep = $mysqli->prepare($increaseBookCountQuery);
+        $increaseBookCountQueryResult = $increaseBookCountQueryPrep->execute();
+        $increaseBookCountQueryPrep->close();
+        echo "This book is successfully added.";
+    }
+}
+
+//Get selected book list's name
 $getBookListNameQuery = "SELECT name FROM book_list WHERE book_list_id = '$bookListID'";
 $getBookListNameQueryResult = $mysqli->query($getBookListNameQuery);
 $getBookListNameQueryRow = $getBookListNameQueryResult->fetch_assoc();
 $bookListName = $getBookListNameQueryRow['name'];
 
-//Add Books to BookList
+
 
 ?>
 <!DOCTYPE html>
@@ -118,16 +148,15 @@ $bookListName = $getBookListNameQueryRow['name'];
             while( $row = mysqli_fetch_assoc($result))
             {
                 echo "<tr>
-                            <td>".$row['title']."</td>
+                            <td><a href=\"editBookList.php?bookListId=" . urlencode($bookListID) . "&bookToAddId=" . urlencode($row['book_id']) .
+                            "&bookToAddEditionNo=" . urlencode($row['edition_no']) . "&bookToAddPublisher=" . urlencode($row['publisher']) . "\">".$row['title']."</a></td>
                             <td>".$row['year']."</td>
                             <td>".$row['genre']."</td>
                             <td>".$row['book_id']."</td>
                             <td>".$row['edition_no']."</td>
                             <td>".$row['publisher']."</td>
                             <td>".$row['page_count']."</td>
-                            <td><button>Add</button></td>
-                        </tr>
-                  ";
+                        </tr>";
             }
             echo "</table>";
         }
