@@ -74,7 +74,7 @@ if( isset($_POST['dislike'])) {
             $updateRatesQueryPrep = $mysqli->prepare($updateRatesQuery);
             $updateRatesQueryResult = $updateRatesQueryPrep->execute();
             $updateRatesQueryPrep->close();
-            //Decrease book dislike count
+            //Decrease book like count
             $decreaseBookLikeQuery = "UPDATE edition SET like_count = like_count - 1 WHERE edition.book_id = '$bookID' AND edition.edition_no = '$editionNO' AND edition.publisher = '$bookEditionPublisher'";
             $decreaseBookLikeQueryPrep = $mysqli->prepare($decreaseBookLikeQuery);
             $decreaseBookLikeQueryResult = $decreaseBookLikeQueryPrep->execute();

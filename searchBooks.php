@@ -1,5 +1,5 @@
 <?php
-	include_once 'config.php'
+	include_once 'config.php';
 ?>
 <!DOCTYPE html>
 <html>
@@ -31,7 +31,6 @@
 	</form>
 		
 	<?php
-    // if search is done using only search by name
     $listSql = "SELECT * FROM books INNER JOIN edition ON books.book_id = edition.book_id";
 
     if( isset($_POST['Search']))
@@ -41,8 +40,6 @@
         $listAuthor = $_POST['listAuthor'];
         $listYear = $_POST['listYear'];
         $listGenre = $_POST['listGenre'];
-
-
 
         // if not all the fields are empty, continue constructing query
         if( !empty($listName) || !empty($listAuthor)  || !empty($listYear)  ||  !empty($listGenre))
@@ -56,14 +53,6 @@
                     $listSql .= "title like '%$listName%'";
                 } else {
                     $listSql .= " AND title like '%$listName%'";
-                }
-            }
-            if(!empty($listAuthor)) {
-                $andCount++;
-                if($andCount == 1) {
-                    $listSql .= "book_id IN (SELECT book_id FROM users INNER JOIN publishes ON users.user_id = publishes.author_id WHERE name LIKE '%$listAuthor%')";
-                } else {
-                    $listSql .= " AND book_id IN (SELECT book_id FROM users INNER JOIN publishes ON users.user_id = publishes.author_id WHERE name LIKE '%$listAuthor%')";
                 }
             }
             if(!empty($listYear)) {
@@ -80,6 +69,14 @@
                     $listSql .= "genre like '%$listGenre%'";
                 } else {
                     $listSql .= " AND genre like '%$listGenre%'";
+                }
+            }
+            if(!empty($listAuthor)) {
+                $andCount++;
+                if($andCount == 1) {
+                    $listSql .= "books.book_id IN (SELECT book_id FROM users INNER JOIN publishes ON users.user_id = publishes.author_id WHERE name LIKE '%$listAuthor%')";
+                } else {
+                    $listSql .= " AND books.book_id IN (SELECT book_id FROM users INNER JOIN publishes ON users.user_id = publishes.author_id WHERE name LIKE '%$listAuthor%')";
                 }
             }
         }
