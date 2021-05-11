@@ -51,11 +51,11 @@ $getBookInfosInListRowCount = mysqli_num_rows( $getBookInfosInListResult);
 <head>
     <title>List of Books</title>
 </head>
-<body align = "LEFT">
+<body align = "CENTER">
 <div style="width: 49%; position: absolute; top: 0px; left: 150px;">
     <h1><?php echo"$bookListName";?></h1>
     <label>Books In This List:</label>
-    <table style="width:55%;">
+    <table>
         <tr>
             <th>Book Name</th>
             <th>Year</th>
@@ -82,8 +82,8 @@ $getBookInfosInListRowCount = mysqli_num_rows( $getBookInfosInListResult);
         }
         ?>
 </div>
-<div style="width: 49%; position: absolute; top: 0px; left: 750px;">
-    <form action = "" method = "POST">
+<div style="width: 49%; position: absolute; top: 0px;right: 150px;">
+    <form method = "POST">
         <table>
             <tr>
                 <td>     </td>

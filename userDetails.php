@@ -11,6 +11,7 @@ else{
     //This means user looks at his/her own  profile
     $searchedUserID = $_SESSION['userID'];
 }
+$thisUserID = $_SESSION['userID'];
 //Get the user from users table
 $getUserQuery = "SELECT * FROM users WHERE user_id = '$searchedUserID'";
 $getUserQueryResult = $mysqli->query($getUserQuery);
@@ -48,7 +49,7 @@ if( isset($_POST['postSubmit'])) {
     $lastAddedPostID = $getLastAddedPostIDQueryRow['post_id'];
 
     $insertNewPostsRelationQuery = "INSERT INTO posts(post_id, user_id) 
-                            VALUES ('$lastAddedPostID', '$searchedUserID')";
+                            VALUES ('$lastAddedPostID', '$thisUserID')";
     $insertNewPostsRelationQueryPrep = $mysqli->prepare($insertNewPostsRelationQuery);
     $insertNewPostsRelationQueryResult = $insertNewPostsRelationQueryPrep->execute();
     $insertNewPostsRelationQueryPrep->close();
@@ -59,7 +60,7 @@ if( isset($_POST['postSubmit'])) {
 if( isset($_POST['like'])) {
     $likedPostID = $_POST['like'];
     //search if rates relation already exists
-    $getRatesInfoQuery = "SELECT * FROM rates_post WHERE rates_post.post_id = '$likedPostID' AND rates_post.user_id = '$searchedUserID'";
+    $getRatesInfoQuery = "SELECT * FROM rates_post WHERE rates_post.post_id = '$likedPostID' AND rates_post.user_id = '$thisUserID'";
     $getRatesInfoQueryResult = $mysqli->query($getRatesInfoQuery . " AND rates_post.is_like = true");
     if($getRatesInfoQueryResult->num_rows==1) {
         echo "You have already liked this post.";
@@ -70,7 +71,7 @@ if( isset($_POST['like'])) {
         if($getRatesInfoDislikeQueryResult->num_rows == 1) {
             echo " You have disliked this book previously";
             //Update previously disliked rates relation as like
-            $updateRatesQuery = "UPDATE rates_post SET is_like = TRUE WHERE rates_post.post_id = '$likedPostID' AND rates_post.user_id = '$searchedUserID'";
+            $updateRatesQuery = "UPDATE rates_post SET is_like = TRUE WHERE rates_post.post_id = '$likedPostID' AND rates_post.user_id = '$thisUserID'";
             $updateRatesQueryPrep = $mysqli->prepare($updateRatesQuery);
             $updateRatesQueryResult = $updateRatesQueryPrep->execute();
             $updateRatesQueryPrep->close();
@@ -83,7 +84,7 @@ if( isset($_POST['like'])) {
         else {
             //add new rates relation
             $insertRatesQuery = "INSERT INTO rates_post(post_id, user_id, is_like) 
-                                VALUES ('$likedPostID', '$searchedUserID', TRUE)";
+                                VALUES ('$likedPostID', '$thisUserID', TRUE)";
             $insertRatesQueryPrep = $mysqli->prepare($insertRatesQuery);
             $insertRatesQueryResult = $insertRatesQueryPrep->execute();
             $insertRatesQueryPrep->close();
@@ -98,7 +99,7 @@ if( isset($_POST['like'])) {
 if( isset($_POST['dislike'])) {
     $dislikedPostID = $_POST['dislike'];
     //search if rates relation already exists
-    $getRatesInfoQuery = "SELECT * FROM rates_post WHERE rates_post.post_id = '$dislikedPostID' AND rates_post.user_id = '$searchedUserID'";
+    $getRatesInfoQuery = "SELECT * FROM rates_post WHERE rates_post.post_id = '$dislikedPostID' AND rates_post.user_id = '$thisUserID'";
     $getRatesInfoLikeQueryResult = $mysqli->query($getRatesInfoQuery . " AND rates_post.is_like = false");
     if($getRatesInfoLikeQueryResult->num_rows==1) {
         echo "You have already disliked this post.";
@@ -109,7 +110,7 @@ if( isset($_POST['dislike'])) {
         if($getRatesInfoDislikeQueryResult->num_rows==1) {
             echo " You have liked this post previously";
             //Update previously liked rates relation as dislike
-            $updateRatesQuery = "UPDATE rates_post SET is_like = FALSE WHERE rates_post.post_id = '$dislikedPostID' AND rates_post.user_id = '$searchedUserID'";
+            $updateRatesQuery = "UPDATE rates_post SET is_like = FALSE WHERE rates_post.post_id = '$dislikedPostID' AND rates_post.user_id = '$thisUserID'";
             $updateRatesQueryPrep = $mysqli->prepare($updateRatesQuery);
             $updateRatesQueryResult = $updateRatesQueryPrep->execute();
             $updateRatesQueryPrep->close();
@@ -122,7 +123,7 @@ if( isset($_POST['dislike'])) {
         else {
             //add new rates relation
             $insertRatesQuery = "INSERT INTO rates_post(post_id, user_id, is_like) 
-                                VALUES ('$dislikedPostID', '$searchedUserID', FALSE)";
+                                VALUES ('$dislikedPostID', '$thisUserID', FALSE)";
             $insertRatesQueryPrep = $mysqli->prepare($insertRatesQuery);
             $insertRatesQueryResult = $insertRatesQueryPrep->execute();
             $insertRatesQueryPrep->close();
@@ -138,7 +139,8 @@ if( isset($_POST['dislike'])) {
 $getUserPostsQuery = "SELECT * FROM post NATURAL JOIN posts WHERE user_id = '$searchedUserID'";
 $getUserPostsQueryResult = $mysqli->query($getUserPostsQuery);
 $getUserPostsQueryRowNum = mysqli_num_rows( $getUserPostsQueryResult);
-
+//is_friends?
+$isFriend = "SELECT * ";
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -161,11 +163,17 @@ $getUserPostsQueryRowNum = mysqli_num_rows( $getUserPostsQueryResult);
     <?php
         if($searchedUserID == $_SESSION['userID']) {
             //User is in his/her profile can create posts
-            echo "<form class=\"button\" method=\"post\">
+            echo "<form method=\"post\">
                     <label>Create new Post:</label><br></br>
                     <textarea type=\"text\" id=\"postContent\" name=\"postContent\" rows='8' cols='50' placeholder='Share with your friends...'></textarea><br></br>
                     <input type=\"submit\" name=\"postSubmit\" value=\"Submit\"/>
                   </form>";
+        }
+        else {
+            //user is in another user's profile
+            if($isFriend){
+
+            }
         }
     ?>
 </div>

@@ -17,8 +17,9 @@
 
 <?php
 if( isset($_POST['searchUser'])) {
+    $userID = $_SESSION['userID'];
 //get all users with similar username
-    $listSql = "SELECT * FROM users";
+    $listSql = "SELECT * FROM users WHERE user_id !='$userID'";
 
     if (isset($_POST['searchUser'])) {
         $listName = $_POST['userName'];
@@ -40,7 +41,7 @@ if( isset($_POST['searchUser'])) {
     if ($resultCheck > 0) {
         while ($row = mysqli_fetch_assoc($result)) {
             echo "<tr>
-                    <td>" . $row['name'] . "</td>
+                    <td><a href=\"userDetails.php?searchedUserID=" . urlencode($row['user_id']) . "\">" . $row['name'] . "</td>
                     <td>" . $row['gender'] . "</td>
                     <td>" . $row['created_at'] . "</td>
                   </tr>";
