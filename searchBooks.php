@@ -12,19 +12,21 @@
 		<table align = "CENTER">
 		<tr>
 			<td>     </td>
+            <td>Book Name:</td>
 			<td>Genre:</td>
 			<td>Author:</td>
-			<td>Year:</td>
+			<td colspan="2">Year:</td>
 		</tr>
 		<tr>
-			<td>Sort by:</td>
+			<td>Search by:</td>
+            <td><input type = "text" name = "listName" value = "" placeholder = "Search by name"></td>
 			<td><input type = "text" name = "listGenre" value = "" placeholder = "Genre"></td>
 			<td><input type = "text" name = "listAuthor" value = "" placeholder = "Author"></td>
-			<td><input type = "date" name = "listYear" value = "" placeholder = "Year"></td>
+			<td><input type = "date" name = "listYear"></td>
+            <td><input type = "date" name = "listYear2"></td>
+
 		</tr>
 		<tr>
-			<td>Search:</td>
-			<td><input type = "text" name = "listName" value = "" placeholder = "Search by name"></td>
 			<td><input type = "submit" name = "Search" value = "Search"</td>
 		</tr>
 		</table>
@@ -35,7 +37,7 @@
     if(!empty($_GET['recommendBookTo'])){
         $recommendBookTo = $_GET['recommendBookTo'];
     }
-    $listSql = "SELECT * FROM books INNER JOIN edition ON books.book_id = edition.book_id";
+    $listSql = "SELECT * FROM books NATURAL JOIN edition";
 
     if( isset($_POST['Search']))
     {
@@ -43,10 +45,11 @@
         $listName = $_POST['listName'];
         $listAuthor = $_POST['listAuthor'];
         $listYear = $_POST['listYear'];
+        $listYear2 = $_POST['listYear2'];
         $listGenre = $_POST['listGenre'];
 
         // if not all the fields are empty, continue constructing query
-        if( !empty($listName) || !empty($listAuthor)  || !empty($listYear)  ||  !empty($listGenre))
+        if( !empty($listName) || !empty($listAuthor)  || !empty($listYear)|| !empty($listYear2)   ||  !empty($listGenre))
         {
             $listSql .= " WHERE ";
             $andCount = 0;
@@ -62,9 +65,9 @@
             if(!empty($listYear)) {
                 $andCount++;
                 if ($andCount == 1) {
-                    $listSql .= "year like '%$listYear%'";
+                    $listSql .= "year BETWEEN '$listYear' AND '$listYear2'";
                 } else {
-                    $listSql .= " AND year like '%$listYear%'";
+                    $listSql .= " AND year BETWEEN '$listYear' AND '$listYear2'";
                 }
             }
             if(!empty($listGenre)) {
@@ -78,9 +81,9 @@
             if(!empty($listAuthor)) {
                 $andCount++;
                 if($andCount == 1) {
-                    $listSql .= "books.book_id IN (SELECT book_id FROM users INNER JOIN publishes ON users.user_id = publishes.author_id WHERE name LIKE '%$listAuthor%')";
+                    $listSql .= "edition.book_id IN (SELECT book_id FROM users INNER JOIN publishes ON users.user_id = publishes.author_id WHERE name LIKE '%$listAuthor%')";
                 } else {
-                    $listSql .= " AND books.book_id IN (SELECT book_id FROM users INNER JOIN publishes ON users.user_id = publishes.author_id WHERE name LIKE '%$listAuthor%')";
+                    $listSql .= " AND edition.book_id IN (SELECT book_id FROM users INNER JOIN publishes ON users.user_id = publishes.author_id WHERE name LIKE '%$listAuthor%')";
                 }
             }
         }
