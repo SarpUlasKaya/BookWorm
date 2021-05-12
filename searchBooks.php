@@ -113,8 +113,7 @@
                         <td>".$row['edition_no']."</td>
                         <td>".$row['publisher']."</td>
                         <td>".$row['page_count']."</td>
-                    </tr>
-              ";
+                    </tr>";
             }
             echo "</table>";
         }

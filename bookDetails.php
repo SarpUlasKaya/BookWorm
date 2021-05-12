@@ -14,8 +14,8 @@ if($_GET['recommendBookTo']){
 if( isset($_POST['newPageCountSubmit'])) {
     $newCurrentPageNum = $_POST['newCurrentPageNum'];
     //Mark new Progress
-    $markProgressQuery = "INSERT INTO mark_progress(current_page, progress_date, user_id, book_id) 
-                            VALUES ('$newCurrentPageNum', NOW(),'$userID', '$bookID')";
+    $markProgressQuery = "INSERT INTO mark_progress(current_page, progress_date, user_id, book_id, edition_no, publisher) 
+                            VALUES ('$newCurrentPageNum', NOW(),'$userID', '$bookID','$editionNO', '$bookEditionPublisher')";
     $markProgressQueryPrep = $mysqli->prepare($markProgressQuery);
     $markProgressQueryResult = $markProgressQueryPrep->execute();
     $markProgressQueryPrep->close();

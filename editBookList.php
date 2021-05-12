@@ -82,32 +82,33 @@ $getBookInfosInListRowCount = mysqli_num_rows( $getBookInfosInListResult);
         }
         ?>
 </div>
-<div style="width: 49%; position: absolute; top: 0px;right: 0px;">
-    <form method = "post">
-        <table>
+<div style="width: 49%; position: absolute; top: 0px;right: 75px;">
+    <form action = "" method = "POST">
+        <table align = "CENTER">
             <tr>
                 <td>     </td>
+                <td>Book Name:</td>
                 <td>Genre:</td>
                 <td>Author:</td>
-                <td>Year:</td>
+                <td colspan="2">Year:</td>
             </tr>
             <tr>
-                <td>Sort by:</td>
+                <td>Search by:</td>
+                <td><input type = "text" name = "listName" value = "" placeholder = "Search by name"></td>
                 <td><input type = "text" name = "listGenre" value = "" placeholder = "Genre"></td>
                 <td><input type = "text" name = "listAuthor" value = "" placeholder = "Author"></td>
-                <td><input type = "date" name = "listYear" value = "" placeholder = "Year"></td>
+                <td><input type = "date" name = "listYear"></td>
+                <td><input type = "date" name = "listYear2"></td>
+
             </tr>
             <tr>
-                <td>Search:</td>
-                <td><input type = "text" name = "listName" value = "" placeholder = "Search by name"></td>
                 <td><input type = "submit" name = "Search" value = "Search"</td>
             </tr>
         </table>
     </form>
 
     <?php
-    // if search is done using only search by name
-    $listSql = "SELECT * FROM books INNER JOIN edition ON books.book_id = edition.book_id";
+    $listSql = "SELECT * FROM books NATURAL JOIN edition";
 
     if( isset($_POST['Search']))
     {
@@ -115,12 +116,11 @@ $getBookInfosInListRowCount = mysqli_num_rows( $getBookInfosInListResult);
         $listName = $_POST['listName'];
         $listAuthor = $_POST['listAuthor'];
         $listYear = $_POST['listYear'];
+        $listYear2 = $_POST['listYear2'];
         $listGenre = $_POST['listGenre'];
 
-
-
         // if not all the fields are empty, continue constructing query
-        if( !empty($listName) || !empty($listAuthor)  || !empty($listYear)  ||  !empty($listGenre))
+        if( !empty($listName) || !empty($listAuthor)  || !empty($listYear)|| !empty($listYear2)   ||  !empty($listGenre))
         {
             $listSql .= " WHERE ";
             $andCount = 0;
@@ -133,20 +133,12 @@ $getBookInfosInListRowCount = mysqli_num_rows( $getBookInfosInListResult);
                     $listSql .= " AND title like '%$listName%'";
                 }
             }
-            if(!empty($listAuthor)) {
-                $andCount++;
-                if($andCount == 1) {
-                    $listSql .= "book_id IN (SELECT book_id FROM users INNER JOIN publishes ON users.user_id = publishes.author_id WHERE name LIKE '%$listAuthor%')";
-                } else {
-                    $listSql .= " AND book_id IN (SELECT book_id FROM users INNER JOIN publishes ON users.user_id = publishes.author_id WHERE name LIKE '%$listAuthor%')";
-                }
-            }
             if(!empty($listYear)) {
                 $andCount++;
                 if ($andCount == 1) {
-                    $listSql .= "year like '%$listYear%'";
+                    $listSql .= "year BETWEEN '$listYear' AND '$listYear2'";
                 } else {
-                    $listSql .= " AND year like '%$listYear%'";
+                    $listSql .= " AND year BETWEEN '$listYear' AND '$listYear2'";
                 }
             }
             if(!empty($listGenre)) {
@@ -157,21 +149,29 @@ $getBookInfosInListRowCount = mysqli_num_rows( $getBookInfosInListResult);
                     $listSql .= " AND genre like '%$listGenre%'";
                 }
             }
+            if(!empty($listAuthor)) {
+                $andCount++;
+                if($andCount == 1) {
+                    $listSql .= "edition.book_id IN (SELECT book_id FROM users INNER JOIN publishes ON users.user_id = publishes.author_id WHERE name LIKE '%$listAuthor%')";
+                } else {
+                    $listSql .= " AND edition.book_id IN (SELECT book_id FROM users INNER JOIN publishes ON users.user_id = publishes.author_id WHERE name LIKE '%$listAuthor%')";
+                }
+            }
         }
         $result = mysqli_query($mysqli, $listSql);
         $resultCheck = mysqli_num_rows( $result);
         echo"<h2>Results</h2>
-                <p>To add a caption to a table, use the caption tag.</p>
-                <table>
-                <tr>
-                    <th>Book Name</th>
-                    <th>Year</th>          
-                    <th>Genre</th>
-                    <th>ID</th> 
-                    <th>Edition No</th>
-                    <th>Publisher</th>   
-                    <th>Page Count</th>   
-                </tr>";
+            <p>To add a caption to a table, use the caption tag.</p>
+            <table style=\"width:75%\">
+            <tr>
+                <th>Book Name</th>
+                <th>Year</th>          
+                <th>Genre</th>
+                <th>ID</th> 
+                <th>Edition No</th>
+                <th>Publisher</th>   
+                <th>Page Count</th>   
+            </tr>";
         if( $resultCheck > 0)
         {
             while( $row = mysqli_fetch_assoc($result))

@@ -27,7 +27,7 @@
         $format = $_POST['format'];
 
         if ( !empty($bookTitle) && !empty($year) && !empty($genre) && !empty($summary) &&
-            !empty($editionNo) && !empty($publisher) && !empty($publishYear) && !empty($language)) {
+            !empty($editionNo) && !empty($publisher) && !empty($publishYear) && !empty($language) && !empty($totalPageCount)) {
             //SEARCH IF BOOK ALREADY EXISTS
             $queryIsBookExists = " select book_id from books where title = '$bookTitle' and year = '$year' and genre = '$genre' and summary = '$summary'";
             if($isBookExist = $mysqli->query($queryIsBookExists)) {
@@ -43,8 +43,8 @@
                 }
                 else {
                     //ADD NEW BOOK TO BOOK TABLE
-                    $queryBook = "INSERT INTO books( book_id, title, genre, year, summary) VALUES (LAST_INSERT_ID(),'$bookTitle', '$genre',
-                                                                        '$year', '$summary')";
+                    $queryBook = "INSERT INTO books(title, genre, year, summary)
+                                    VALUES ('$bookTitle', '$genre', '$year', '$summary')";
                     $bookInsert = $mysqli->prepare($queryBook);
                     $resultBookInsert = $bookInsert->execute();
                     $bookInsert->close();
