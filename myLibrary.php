@@ -42,6 +42,7 @@ $getBookListsQueryRowCount = mysqli_num_rows( $getBookListsQueryResult);
 </head>
 <body align = \"CENTER\">
     <div style="width: 49%; position: absolute; top: 0px; left: 150px;">
+        <h1>My Libraries</h1>
         <table style=\"width:75%\">
             <tr>
                 <th>Book List Name</th>
@@ -66,6 +67,7 @@ $getBookListsQueryRowCount = mysqli_num_rows( $getBookListsQueryResult);
             ?>
     </div>
     <div style="width: 49%; position: absolute; top: 0px; left: 750px;">
+        <h1>Create New Library</h1>
         <form method="post">
             <label>ADD New Book List<input type="text" name="newBookListName"/></label> <br><br>
             <input type="submit" name="addNewBookList" value="Submit" />

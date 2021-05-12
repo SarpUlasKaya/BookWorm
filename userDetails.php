@@ -154,6 +154,12 @@ if( isset($_POST['acceptFriendRequest'])) {
     $insertAddAsFriendQueryResult = $insertAddAsFriendQueryPrep->execute();
     $insertAddAsFriendQueryPrep->close();
 }
+if( isset($_POST['removeFriend'])) {
+    $deleteFriendQuery = "DELETE FROM add_as_friend WHERE (user_id = '$thisUserID' AND friend_id = '$searchedUserID') OR (user_id = '$searchedUserID' AND friend_id = '$thisUserID')";
+    $deleteFriendQueryQueryPrep = $mysqli->prepare($deleteFriendQuery);
+    $deleteFriendQuery1Result = $deleteFriendQueryQueryPrep->execute();
+    $deleteFriendQueryQueryPrep->close();
+}
 //is_friends?
 $isFriendRequestSentQuery = "SELECT COUNT(*) AS row_count FROM add_as_friend WHERE user_id = $thisUserID AND friend_id = $searchedUserID";
 $isFriendRequestSentQueryResult = $mysqli->query($isFriendRequestSentQuery);
@@ -211,7 +217,10 @@ $isFriendRequestReceivedQueryRow = $isFriendRequestReceivedQueryResult->fetch_as
             else {
                 //users are friends show recommend book button
                 echo "<form method=\"post\" action=\"searchBooks.php?recommendBookTo=". urlencode($searchedUserID) . "\">"."
-                    <button name='recommendBook' class='btn'> RECOMMEND BOOK </button>
+                        <button name='recommendBook' class='btn'> RECOMMEND BOOK </button>
+                      </form>
+                      <form method=\"post\" style='margin-top: 15px;'>
+                        <button name='removeFriend' class='btn-danger'> REMOVE FRIEND </button>
                       </form>";
             }
         }
@@ -241,6 +250,16 @@ $isFriendRequestReceivedQueryRow = $isFriendRequestReceivedQueryResult->fetch_as
 <style>
     .btn {
         background-color: cadetblue;
+        border: none;
+        color: white;
+        padding: 15px 32px;
+        text-align: center;
+        text-decoration: none;
+        display: inline-block;
+        font-size: 16px;
+    }
+    .btn-danger{
+        background-color: red;
         border: none;
         color: white;
         padding: 15px 32px;
