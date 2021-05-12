@@ -147,6 +147,10 @@ if( isset($_POST['recommendBook'])){
     $insertRecommendsQueryResult = $insertRecommendsQueryPrep->execute();
     $insertRecommendsQueryPrep->close();
 }
+//Search if this book is recommended previously
+$searchRecommendsQuery = "SELECT COUNT(*) AS recommended_before FROM recommends WHERE edition_no = '$editionNO' AND publisher = '$bookEditionPublisher' AND book_id = '$bookID' AND user_id = '$userID' AND friend_id = '$recommendBookTo'";
+$searchRecommendsQueryResult = $mysqli->query($searchRecommendsQuery);
+$searchRecommendsQueryRow = $searchRecommendsQueryResult->fetch_assoc();
 ?>
 
 <!DOCTYPE html>
@@ -190,9 +194,14 @@ if( isset($_POST['recommendBook'])){
         <button name="dislike"><img src="img/dislike.png" alt="Dislike" style="position: relative; height: 40px; width: 40px;"></button>
     </form>
     <?php
-        if($recommendBookTo){
+        if($recommendBookTo && $searchRecommendsQueryRow['recommended_before'] == 0){
             echo "<form method=\"post\" style='margin-top: 20px'>
                     <button name='recommendBook' class='btn'> RECOMMEND BOOK </button>
+                  </form>";
+        }
+        else if($recommendBookTo && $searchRecommendsQueryRow['recommended_before'] == 1){
+            echo "<form method=\"post\" style='margin-top: 20px'>
+                    <button name='recommendBook' class='btn-disable'> PREVIOUSLY RECOMMENDED </button>
                   </form>";
         }
     ?>
@@ -239,6 +248,20 @@ if( isset($_POST['recommendBook'])){
         text-decoration: none;
         display: inline-block;
         font-size: 16px;
+    }
+    .btn-disable
+    {
+        cursor: not-allowed;
+        pointer-events: none;
+        background-color: cadetblue;
+        border: none;
+        color: white;
+        padding: 15px 32px;
+        text-align: center;
+        text-decoration: none;
+        display: inline-block;
+        font-size: 16px;
+
     }
     table, th, td {
         border: 1px solid black;
