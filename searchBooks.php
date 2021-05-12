@@ -31,6 +31,10 @@
 	</form>
 		
 	<?php
+    $recommendBookTo = false;
+    if(!empty($_GET['recommendBookTo'])){
+        $recommendBookTo = $_GET['recommendBookTo'];
+    }
     $listSql = "SELECT * FROM books INNER JOIN edition ON books.book_id = edition.book_id";
 
     if( isset($_POST['Search']))
@@ -99,7 +103,7 @@
             while( $row = mysqli_fetch_assoc($result))
             {
                 echo "<tr>
-                        <td><a href=\"bookDetails.php?bookId=" . urlencode($row['book_id']) . "&editionNo=" . urlencode($row['edition_no']) . "&publisher=" . urlencode($row['publisher']) . "\">".$row['title']."</a></td>
+                        <td><a href=\"bookDetails.php?bookId=" . urlencode($row['book_id']) . "&editionNo=" . urlencode($row['edition_no']) . "&publisher=" . urlencode($row['publisher']) . "&recommendBookTo=". urlencode($recommendBookTo) .  "\">".$row['title']."</a></td>
                         <td>".$row['year']."</td>
                         <td>".$row['genre']."</td>
                         <td>".$row['book_id']."</td>

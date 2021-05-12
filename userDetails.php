@@ -139,8 +139,29 @@ if( isset($_POST['dislike'])) {
 $getUserPostsQuery = "SELECT * FROM post NATURAL JOIN posts WHERE user_id = '$searchedUserID'";
 $getUserPostsQueryResult = $mysqli->query($getUserPostsQuery);
 $getUserPostsQueryRowNum = mysqli_num_rows( $getUserPostsQueryResult);
+//send friend req
+if( isset($_POST['addFriendRequest'])) {
+    $insertAddAsFriendQuery = "INSERT INTO add_as_friend(user_id, friend_id) 
+                                VALUES ('$thisUserID', '$searchedUserID')";
+    $insertAddAsFriendQueryPrep = $mysqli->prepare($insertAddAsFriendQuery);
+    $insertAddAsFriendQueryResult = $insertAddAsFriendQueryPrep->execute();
+    $insertAddAsFriendQueryPrep->close();
+}
+if( isset($_POST['acceptFriendRequest'])) {
+    $insertAddAsFriendQuery = "INSERT INTO add_as_friend(user_id, friend_id) 
+                                VALUES ('$thisUserID', '$searchedUserID')";
+    $insertAddAsFriendQueryPrep = $mysqli->prepare($insertAddAsFriendQuery);
+    $insertAddAsFriendQueryResult = $insertAddAsFriendQueryPrep->execute();
+    $insertAddAsFriendQueryPrep->close();
+}
 //is_friends?
-$isFriend = "SELECT * ";
+$isFriendRequestSentQuery = "SELECT COUNT(*) AS row_count FROM add_as_friend WHERE user_id = $thisUserID AND friend_id = $searchedUserID";
+$isFriendRequestSentQueryResult = $mysqli->query($isFriendRequestSentQuery);
+$isFriendRequestSentQueryRow = $isFriendRequestSentQueryResult->fetch_assoc();
+
+$isFriendRequestReceivedQuery = "SELECT COUNT(*) AS row_count FROM add_as_friend WHERE user_id = $searchedUserID AND friend_id = $thisUserID";
+$isFriendRequestReceivedQueryResult = $mysqli->query($isFriendRequestReceivedQuery);
+$isFriendRequestReceivedQueryRow = $isFriendRequestReceivedQueryResult->fetch_assoc();
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -171,10 +192,30 @@ $isFriend = "SELECT * ";
         }
         else {
             //user is in another user's profile
-            if($isFriend){
-
+            if($isFriendRequestSentQueryRow['row_count'] == 0 && $isFriendRequestReceivedQueryRow['row_count'] == 0){
+                //They are not friends and no friend request is sent nor recieved show normal ADD AS FRIEND BUTTON
+                echo "<form method=\"post\">
+                        <button name='addFriendRequest' class='btn'> ADD AS FRIEND </button>
+                      </form>";
+            }
+            else if($isFriendRequestSentQueryRow['row_count'] == 1 && $isFriendRequestReceivedQueryRow['row_count'] == 0){
+                //This user has sent friend request and reciever didn't accept yet Disable add as friend button
+                echo "<button name='disabledAddFriend' class='addFriendButton-disable'> PENDING FRIEND REQUEST... </button>";
+            }
+            else if($isFriendRequestSentQueryRow['row_count'] == 0 && $isFriendRequestReceivedQueryRow['row_count'] == 1){
+                //The searched user has previously sent friend request and this user has not accepted yet
+                echo "<form method=\"post\">
+                        <button name='acceptFriendRequest' class='btn'> ACCEPT FRIEND REQUEST </button>
+                      </form>";
+            }
+            else {
+                //users are friends show recommend book button
+                echo "<form method=\"post\" action=\"searchBooks.php?recommendBookTo=". urlencode($searchedUserID) . "\">"."
+                    <button name='recommendBook' class='btn'> RECOMMEND BOOK </button>
+                      </form>";
             }
         }
+
     ?>
 </div>
 <div style="width: 49%; position: absolute; top: 0px; right: 150px; width: 500px; height: 600px; border: 1px solid black; border-collapse: collapse; overflow:scroll;">
@@ -197,4 +238,29 @@ $isFriend = "SELECT * ";
 </div>
 </body>
 </html>
+<style>
+    .btn {
+        background-color: cadetblue;
+        border: none;
+        color: white;
+        padding: 15px 32px;
+        text-align: center;
+        text-decoration: none;
+        display: inline-block;
+        font-size: 16px;
+    }
+    .addFriendButton-disable
+    {
+        cursor: not-allowed;
+        pointer-events: none;
+        background-color: cadetblue;
+        border: none;
+        color: white;
+        padding: 15px 32px;
+        text-align: center;
+        text-decoration: none;
+        display: inline-block;
+        font-size: 16px;
 
+    }
+</style>
