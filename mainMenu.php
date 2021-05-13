@@ -14,6 +14,7 @@
                     <a style="margin-left: 25px; display: inline-block; color: darkgrey;text-decoration: navajowhite;" href="createReadingChallenge.php">Create Reading Challenge</a>
                     <a style="margin-left: 25px; display: inline-block; color: darkgrey;text-decoration: navajowhite;" href="joinReadingChallenge.php">Join Reading Challenge</a>
                     <a style="margin-left: 10px; display: inline-block; color: darkgrey;text-decoration: navajowhite;" href="createQuiz.php">Create Quiz</a>
+                    <a style="margin-left: 10px; display: inline-block; color: darkgrey;text-decoration: navajowhite;" href="solveQuiz.php">Solve Quiz</a>
                     <a style="margin-left: 25px; display: inline-block; color: darkgrey;text-decoration: navajowhite;" href="#">Create Request</a>
                 </li>
             </ul>
