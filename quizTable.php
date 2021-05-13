@@ -19,8 +19,8 @@
     <?php
     echo"   <table style=\"width:100%\">
             <tr>
-                <th>Quiz ID</th>
-                <th>Quiz Name</th>          
+                <th>Quiz Name</th>
+                <th>Quiz ID</th>          
                 <th>Average Score</th>
                 <th>Question No</th> 
                 <th>Attempt No</th> 
@@ -30,7 +30,7 @@
         echo "<tr>
                 <td><a href=\"solveQuiz.php?quizID=" . urlencode($getAllQuizQueryRow['quiz_id']). "&questionID=" . urlencode($questionID).  "&quizScore=" . urlencode($quizScore). "\">" . $getAllQuizQueryRow['name'] . "</a></td>
                 <td>".$getAllQuizQueryRow['quiz_id']."</td>
-                <td>".$getAllQuizQueryRow['average_score']."</td>
+                <td>".$getAllQuizQueryRow['average_score'] ."</td>
                 <td>".$getAllQuizQueryRow['question_no']."</td>
                 <td>".$getAllQuizQueryRow['attempt_no']."</td>
               </tr>";

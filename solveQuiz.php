@@ -48,7 +48,12 @@
         $updateAttemptNoQueryPrep->close();
 
         //UPDATE QUIZ AVERAGE SCORE
+        $updateAvgQuery = "UPDATE quiz SET average_score = (average_score * (attempt_no-1) + '$quizScore')/attempt_no WHERE quiz.quiz_id = '$thisQuizID'";
+        $updateAvgQueryPrep = $mysqli->prepare($updateAvgQuery);
+        $updateAvgQueryResult = $updateAvgQueryPrep->execute();
+        $updateAvgQueryPrep->close();
 
+        header("location: mainMenu.php");
     }
 ?>
 <!DOCTYPE html>
