@@ -26,8 +26,8 @@
     while($getAllQuizQueryRow = $getAllQuizQueryResult->fetch_assoc())
     {
         echo "<tr>
-                <td>".$getAllQuizQueryRow['quiz_id']."</a></td>
-                <td>".$getAllQuizQueryRow['name']."</td>
+                <td><a href=\"solveQuiz.php?quizID=" . urlencode($getAllQuizQueryRow['quiz_id'])."\">" . $getAllQuizQueryRow['name'] . "</a></td>
+                <td>".$getAllQuizQueryRow['quiz_id']."</td>
                 <td>".$getAllQuizQueryRow['average_score']."</td>
                 <td>".$getAllQuizQueryRow['question_no']."</td>
                 <td>".$getAllQuizQueryRow['attempt_no']."</td>
