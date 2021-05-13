@@ -161,11 +161,11 @@ if( isset($_POST['removeFriend'])) {
     $deleteFriendQueryQueryPrep->close();
 }
 //is_friends?
-$isFriendRequestSentQuery = "SELECT COUNT(*) AS row_count FROM add_as_friend WHERE user_id = $thisUserID AND friend_id = $searchedUserID";
+$isFriendRequestSentQuery = "SELECT COUNT(*) AS row_count FROM add_as_friend WHERE user_id = '$thisUserID' AND friend_id = '$searchedUserID'";
 $isFriendRequestSentQueryResult = $mysqli->query($isFriendRequestSentQuery);
 $isFriendRequestSentQueryRow = $isFriendRequestSentQueryResult->fetch_assoc();
 
-$isFriendRequestReceivedQuery = "SELECT COUNT(*) AS row_count FROM add_as_friend WHERE user_id = $searchedUserID AND friend_id = $thisUserID";
+$isFriendRequestReceivedQuery = "SELECT COUNT(*) AS row_count FROM add_as_friend WHERE user_id = '$searchedUserID' AND friend_id = '$thisUserID'";
 $isFriendRequestReceivedQueryResult = $mysqli->query($isFriendRequestReceivedQuery);
 $isFriendRequestReceivedQueryRow = $isFriendRequestReceivedQueryResult->fetch_assoc();
 ?>

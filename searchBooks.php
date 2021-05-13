@@ -90,8 +90,7 @@
         $result = mysqli_query($mysqli, $listSql);
         $resultCheck = mysqli_num_rows( $result);
         echo"<h2>Results</h2>
-            <p>To add a caption to a table, use the caption tag.</p>
-            <table style=\"width:75%\">
+            <table style=\"width:100%\">
             <tr>
                 <th>Book Name</th>
                 <th>Year</th>          

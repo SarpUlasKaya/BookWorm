@@ -31,8 +31,7 @@ if( isset($_POST['searchUser'])) {
     $result = mysqli_query($mysqli, $listSql);
     $resultCheck = mysqli_num_rows($result);
     echo "<h2>Results</h2>
-    <p>To add a caption to a table, use the caption tag.</p>
-        <table style=\"width:75%\">
+        <table style=\"width:100%\">
             <tr>
                 <th>User Name</th>
                 <th>Gender</th>          
