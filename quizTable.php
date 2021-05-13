@@ -5,6 +5,7 @@
     //Get all quizes from db
     $getAllQuizQuery = "SELECT * FROM quiz";
     $getAllQuizQueryResult = $mysqli->query($getAllQuizQuery);
+    $questionID = 1;
 ?>
 <!DOCTYPE html>
 <html>
@@ -26,7 +27,7 @@
     while($getAllQuizQueryRow = $getAllQuizQueryResult->fetch_assoc())
     {
         echo "<tr>
-                <td><a href=\"solveQuiz.php?quizID=" . urlencode($getAllQuizQueryRow['quiz_id'])."\">" . $getAllQuizQueryRow['name'] . "</a></td>
+                <td><a href=\"solveQuiz.php?quizID=" . urlencode($getAllQuizQueryRow['quiz_id']). "&questionID=" . urlencode($questionID). "\">" . $getAllQuizQueryRow['name'] . "</a></td>
                 <td>".$getAllQuizQueryRow['quiz_id']."</td>
                 <td>".$getAllQuizQueryRow['average_score']."</td>
                 <td>".$getAllQuizQueryRow['question_no']."</td>

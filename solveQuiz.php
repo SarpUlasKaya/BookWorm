@@ -3,34 +3,31 @@
     include("config.php");
     //Get questions that belong to this quiz
     $thisQuizID = $_GET['quizID'];
+    $questionID = $_GET['questionID'];
+    echo "current Index: " . $questionID;
 
     $questionCountQuery = "SELECT question_no FROM quiz WHERE  quiz_id = '$thisQuizID'";
     $questionCountQueryResult = $mysqli->query($questionCountQuery);
     $questionCountQueryRow = $questionCountQueryResult->fetch_assoc();
     $questionCount = $questionCountQueryRow['question_no'];
-    echo"asd"."\r\n";
-    $getQuestionsQuery = "SELECT * FROM question WHERE quiz_id = '$thisQuizID'";
-    $getQuestionsQueryResult = $mysqli->query($getQuestionsQuery);
-    $getQuestionsQueryRow = $getQuestionsQueryResult->fetch_assoc();
-    $currentIndex = $getQuestionsQueryRow['question_id'];
-    $currentQuestionText = $getQuestionsQueryRow['question_text'];
-    $currentQOptA = $getQuestionsQueryRow['option_A_text'];
-    $currentQOptB = $getQuestionsQueryRow['option_B_text'];
-    $currentQOptC = $getQuestionsQueryRow['option_C_text'];
-    $currentQOptD = $getQuestionsQueryRow['option_D_text'];
-    echo"current INDEX: " .$currentIndex;
+    echo "question count: " . $questionCount;
 
-    if(isset($_POST['next'])){
-        echo "entered if \r\n";
-        $getQuestionsQueryRow = $getQuestionsQueryResult->fetch_assoc();
-        $currentIndex = $getQuestionsQueryRow['question_id'];
+    $getQuestionsQuery = "SELECT * FROM question WHERE quiz_id = '$thisQuizID' AND question_id = '$questionID'";
+    $getQuestionsQueryResult = $mysqli->query($getQuestionsQuery);
+    if ( $getQuestionsQueryRow = $getQuestionsQueryResult->fetch_assoc() ) {
+        $questionID = $getQuestionsQueryRow['question_id'];
         $currentQuestionText = $getQuestionsQueryRow['question_text'];
         $currentQOptA = $getQuestionsQueryRow['option_A_text'];
         $currentQOptB = $getQuestionsQueryRow['option_B_text'];
         $currentQOptC = $getQuestionsQueryRow['option_C_text'];
         $currentQOptD = $getQuestionsQueryRow['option_D_text'];
-        echo"current Index: " .$currentIndex;
+        if (isset($_POST['next'])) {
+            //CEVAP KONTROL EDİLECEK
+            $questionID++;
+            header("location: solveQuiz.php?quizID=" . urlencode($thisQuizID) . "&questionID=" . urlencode($questionID));
+        }
     }
+
 ?>
 <!DOCTYPE html>
 <html>
@@ -41,7 +38,7 @@
 <body>
 <table>
     <?php
-    if($currentIndex <= $questionCount){
+    if($questionID <= $questionCount){
         echo"<form method='post'>
                 <tr>
                     <td>Question:</td>
