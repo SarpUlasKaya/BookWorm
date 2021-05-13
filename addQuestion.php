@@ -1,3 +1,34 @@
+<?php
+
+    session_start();
+    include("config.php");
+    
+    $addedQuestionCount = 0;
+    $myQuizID = $_GET['quizID'];
+    //get quiz from quiz table
+    $getQuizQuery = "SELECT * FROM quiz WHERE quiz_id = $myQuizID";
+    $getQuizQueryResult = $mysqli->query($getQuizQuery);
+    $getQuizQueryRow = $getQuizQueryResult->fetch_assoc();
+    $questionCount = $getQuizQueryRow['question_no'];
+/*
+$question = $_POST['question'];
+$optionA = $_POST['optionA'];
+$optionB = $_POST['optionB'];
+$optionC = $_POST['optionC'];
+$optionD = $_POST['optionD'];
+$correctAnsIndex = $_POST['optionD'];
+
+//Insert to question table new tuple
+$insertQuestionQuery = "INSERT INTO question(question_text, option_A_text, option_B_text, option_C_text, option_D_text, correct_answer_index)
+                                    VALUES ('$quizName', 0, '$questionCount', 0)";
+$insertQuizQueryPrep = $mysqli->prepare($insertQuizQuery);
+$insertQuizQueryResult = $insertQuizQueryPrep->execute();
+$insertQuizQueryPrep->close();
+*/
+    if(isset($_POST['next'])){
+        $addedQuestionCount = $addedQuestionCount+1;
+    }
+?>
 <!DOCTYPE html>
 <html>
     <head>
@@ -42,5 +73,13 @@
             </tr>
             </form>
         </table>
+        <?php
+            if($addedQuestionCount < $questionCount){
+                echo"<form method='post'><button name='next''>Next Question</button></form>";
+            }
+            else{
+                echo"<button>Create Quiz</button>";
+            }
+        ?>
     </body>
 </html>
