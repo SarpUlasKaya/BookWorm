@@ -1,9 +1,13 @@
 <?php
     session_start();
     include("config.php");
+
+    $thisUserID = $_SESSION['userID'];
+
     //Get questions that belong to this quiz
     $thisQuizID = $_GET['quizID'];
     $questionID = $_GET['questionID'];
+    $quizScore = $_GET['quizScore'];
     echo "current Index: " . $questionID;
 
     $questionCountQuery = "SELECT question_no FROM quiz WHERE  quiz_id = '$thisQuizID'";
@@ -22,12 +26,30 @@
         $currentQOptC = $getQuestionsQueryRow['option_C_text'];
         $currentQOptD = $getQuestionsQueryRow['option_D_text'];
         if (isset($_POST['next'])) {
-            //CEVAP KONTROL EDİLECEK
+            if ($_POST['answer'] == $getQuestionsQueryRow['correct_answer_index']) {
+                $quizScore++;
+            }
             $questionID++;
-            header("location: solveQuiz.php?quizID=" . urlencode($thisQuizID) . "&questionID=" . urlencode($questionID));
+            header("location: solveQuiz.php?quizID=" . urlencode($thisQuizID) . "&questionID=" . urlencode($questionID) . "&quizScore=" . urlencode($quizScore));
         }
     }
+    if (isset($_POST['finish'])) {
+        //INSERT INTO SOLVES RELATION
+        $insertSolvesQuery = "INSERT INTO solves(user_id, quiz_id, score) 
+                                    VALUES ('$thisUserID', '$thisQuizID', '$quizScore')";
+        $insertSolvesQueryPrep = $mysqli->prepare($insertSolvesQuery);
+        $insertSolvesQueryResult = $insertSolvesQueryPrep->execute();
+        $insertSolvesQueryPrep->close();
 
+        //UPDATE QUIZ ATTEMPT NO
+        $updateAttemptNoQuery = "UPDATE quiz SET attempt_no = attempt_no + 1 WHERE quiz.quiz_id = '$thisQuizID'";
+        $updateAttemptNoQueryPrep = $mysqli->prepare($updateAttemptNoQuery);
+        $updateAttemptNoQueryResult = $updateAttemptNoQueryPrep->execute();
+        $updateAttemptNoQueryPrep->close();
+
+        //UPDATE QUIZ AVERAGE SCORE
+
+    }
 ?>
 <!DOCTYPE html>
 <html>
