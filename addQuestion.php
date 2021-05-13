@@ -36,7 +36,12 @@
     $getQuestionCountQueryResult = $mysqli->query($getQuestionCountQuery);
     $getQuestionCountQueryRow = $getQuestionCountQueryResult->fetch_assoc();
     $currentQuestionCount = $getQuestionCountQueryRow['question_count'];
-    echo"Num of current questions: " . $currentQuestionCount;
+    if(isset($_POST['create'])){
+        echo "<script>
+            alert('Succesfully created quiz');
+            window.location.href='mainMenu.php';
+        </script>";
+    }
 ?>
 <!DOCTYPE html>
 <html>
@@ -85,7 +90,7 @@
                     echo"<button name='next''>Next Question</button>";
                 }
                 else{
-                    echo"<button>Create Quiz</button>";
+                    echo"<button name='create'>Create Quiz</button>";
                 }
                 ?>
             </form>
