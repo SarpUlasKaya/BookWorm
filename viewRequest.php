@@ -23,9 +23,7 @@
         $insertAcceptsQueryPrep = $mysqli->prepare($insertAcceptsQuery);
         $insertAcceptsQueryResult = $insertAcceptsQueryPrep->execute();
         $insertAcceptsQueryPrep->close();
-        $selectedRequestID = null;
-
-
+        header("location:editBook.php?requestID=".urlencode($selectedRequestID));
     }
 
     //Get the selected request
@@ -74,8 +72,10 @@
                     <h3>Request Body:<span><h4>".$getSelectedRequestRow['text']."</h4></span></h3>
                     <form method='post'>
                         <button class='btn' name='acceptReq'>Accept</button>
+                    </form>
+                    <form method='post'>
                         <button class='btn' style='background-color: red' name='deleteReq'>Delete</button>
-                     </form>
+                    </form>
             ";
         }
     ?>
