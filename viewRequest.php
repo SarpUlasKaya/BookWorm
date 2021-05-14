@@ -42,6 +42,7 @@
 </head>
 <body>
 <div style="width: 49%; position: absolute; top: 0px; left: 50px;">
+
 <?php
     echo"<h1>All Waiting Requests</h1>
                 <table style=\"width:75%\">
@@ -80,6 +81,9 @@
         }
     ?>
 </div>
+
+<a style ="position: absolute; bottom: 0px; right: 0px;"href="mainMenu.php">Main Menu</a>
+<br></br>
 </body>
 </html>
 
@@ -101,5 +105,17 @@
     th, td {
         padding: 5px;
         text-align: left;
+    }
+    a:link, a:visited {
+      background-color: #f44336;
+      color: white;
+      padding: 14px 25px;
+      text-align: center;
+      text-decoration: none;
+      display: inline-block;
+    }
+
+    a:hover, a:active {
+      background-color: red;
     }
 </style>

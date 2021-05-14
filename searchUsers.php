@@ -9,6 +9,7 @@
     <h1>List of Users</h1>
 </head>
 <body align = "CENTER">
+
 <form action = "" method = "POST">
     <label>Search:</label>
     <input type = "text" name = "userName" placeholder = "Search by Username">
@@ -49,6 +50,8 @@ if( isset($_POST['searchUser'])) {
     }
 }
 ?>
+<a style ="position: absolute; bottom: 0px; right: 0px;"href="mainMenu.php">Main Menu</a>
+<br></br>
 </body>
 </html>
 <style>
@@ -59,5 +62,17 @@ if( isset($_POST['searchUser'])) {
     th, td {
         padding: 5px;
         text-align: left;
+    }
+    a:link, a:visited {
+      background-color: #f44336;
+      color: white;
+      padding: 14px 25px;
+      text-align: center;
+      text-decoration: none;
+      display: inline-block;
+    }
+
+    a:hover, a:active {
+      background-color: red;
     }
 </style>

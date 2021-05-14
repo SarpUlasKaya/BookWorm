@@ -227,6 +227,7 @@ $isFriendRequestReceivedQueryRow = $isFriendRequestReceivedQueryResult->fetch_as
 
     ?>
 </div>
+
 <div style="width: 49%; position: absolute; top: 0px; right: 150px; width: 500px; height: 600px; border: 1px solid black; border-collapse: collapse; overflow:scroll;">
     <h1>Posts: </h1>
     <?php
@@ -244,7 +245,10 @@ $isFriendRequestReceivedQueryRow = $isFriendRequestReceivedQueryResult->fetch_as
             }
         }
     ?>
+
 </div>
+<a style ="position: absolute; bottom: 0px; right: 0px;"href="mainMenu.php">Main Menu</a>
+<br></br>
 </body>
 </html>
 <style>
@@ -281,5 +285,18 @@ $isFriendRequestReceivedQueryRow = $isFriendRequestReceivedQueryResult->fetch_as
         display: inline-block;
         font-size: 16px;
 
+    }
+
+    a:link, a:visited {
+      background-color: #f44336;
+      color: white;
+      padding: 14px 25px;
+      text-align: center;
+      text-decoration: none;
+      display: inline-block;
+    }
+
+    a:hover, a:active {
+      background-color: red;
     }
 </style>

@@ -51,12 +51,17 @@ $getAllChallengesQueryResult = $mysqli->query($getAllChallengesQuery);
 <html lang="en">
 <head>
     <meta charset="UTF-8">
+
     <title>
         Reading Challenge
     </title>
+    <h1> Join a Reading Challenge </h1>
+    <br></br>
+
 </head>
 <body>
-    <div style="width: 49%; position: absolute; top: 0px; left: 50px;">
+
+    <div style="width: 49%; position: relative; top: 0px; left: 50px;">
         <h1>All Current Challenges:</h1>
         <table style="margin-top: 50px;">
             <tr>
@@ -104,9 +109,9 @@ $getAllChallengesQueryResult = $mysqli->query($getAllChallengesQuery);
         }
         ?>
     </div>
-    <h1>
 
-    </h1>
+<a style ="position: absolute; bottom: 0px; right: 0px;"href="mainMenu.php">Main Menu</a>
+<br></br>
 </body>
 
 <style>
@@ -127,5 +132,17 @@ $getAllChallengesQueryResult = $mysqli->query($getAllChallengesQuery);
     th, td {
         padding: 5px;
         text-align: left;
+    }
+    a:link, a:visited {
+      background-color: #f44336;
+      color: white;
+      padding: 14px 25px;
+      text-align: center;
+      text-decoration: none;
+      display: inline-block;
+    }
+
+    a:hover, a:active {
+      background-color: red;
     }
 </style>

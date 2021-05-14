@@ -109,6 +109,10 @@
 </div>
 <form class="button" action="addBook.php" method="post">
     <div>
+         <a style ="position: absolute; bottom: 0px; right: 0px;"href="mainMenu.php">Main Menu</a>
+         <br></br>
+    </div>
+    <div>
         <input type="text"
                id="bookTitle"
                name="bookTitle"
@@ -175,6 +179,22 @@
 </form>
 </body>
 </html>
+
+<style>
+a:link, a:visited {
+  background-color: #f44336;
+  color: white;
+  padding: 14px 25px;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+}
+
+a:hover, a:active {
+  background-color: red;
+}
+</style>
+
 <script>
     function checkForEmptyInputs() {
         var errorMsg = "";

@@ -52,6 +52,7 @@
 <body>
 <form method="post">
 <div style="width: 49%; position: absolute; top: 0px; left: 100px;">
+
     <h1>Create a Request</h1>
         <label>Title:</label><br>
         <input type="text" name="reqTitle" placeholder="Enter title"><br>
@@ -92,6 +93,8 @@
     ?>
 </div>
 </form>
+<a style ="position: absolute; bottom: 0px; right: 0px;"href="mainMenu.php">Main Menu</a>
+<br></br>
 </body>
 </html>
 <style>
@@ -112,5 +115,17 @@
     th, td {
         padding: 5px;
         text-align: left;
+    }
+    a:link, a:visited {
+      background-color: #f44336;
+      color: white;
+      padding: 14px 25px;
+      text-align: center;
+      text-decoration: none;
+      display: inline-block;
+    }
+
+    a:hover, a:active {
+      background-color: red;
     }
 </style>

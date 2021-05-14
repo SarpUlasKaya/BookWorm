@@ -12,6 +12,8 @@
 <html>
 <head>
     <title>Solve a Quiz</title>
+    <a style ="position: absolute; bottom: 0px; right: 0px;"href="mainMenu.php">Main Menu</a>
+    <br></br>
     <h1>Solve a Quiz</h1>
 </head>
 
@@ -48,5 +50,17 @@
     th, td {
         padding: 5px;
         text-align: left;
+    }
+    a:link, a:visited {
+      background-color: #f44336;
+      color: white;
+      padding: 14px 25px;
+      text-align: center;
+      text-decoration: none;
+      display: inline-block;
+    }
+
+    a:hover, a:active {
+      background-color: red;
     }
 </style>
