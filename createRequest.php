@@ -67,7 +67,7 @@
         while($getAllBooksQueryRow = $getAllBooksQueryResult->fetch_assoc())
         {
             echo "<tr>
-                        <td><input type = \"radio\" name = \"selected\" value = \"1\"></td>
+                        <td><input type = \"radio\" name = \"selected\" value=\"".$getAllBooksQueryRow["book_id"]."\"></td>
                         <td>".$getAllBooksQueryRow['title']."</td>
                         <td>".$getAllBooksQueryRow['year']."</td>
                         <td>".$getAllBooksQueryRow['genre']."</td>
