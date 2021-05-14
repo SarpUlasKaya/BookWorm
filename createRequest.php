@@ -6,8 +6,8 @@
         $reqTitle = $_POST['reqTitle'];
         $reqBody = $_POST['reqBody'];
         //Insert into request table new tuple
-        $insertRequestQuery = "INSERT INTO request(text) 
-                                        VALUES ('$reqBody')";
+        $insertRequestQuery = "INSERT INTO request(text, title) 
+                                        VALUES ('$reqBody', '$reqTitle')";
         $insertRequestQueryPrep = $mysqli->prepare($insertRequestQuery);
         $insertRequestQueryResult = $insertRequestQueryPrep->execute();
         $insertRequestQueryPrep->close();
@@ -22,6 +22,18 @@
         $insertSendsQueryPrep = $mysqli->prepare($insertSendsQuery);
         $insertSendsQueryResult = $insertSendsQueryPrep->execute();
         $insertSendsQueryPrep->close();
+        //Select the book that req is concerned about
+        $bookInfo = $_POST['selected'];
+        $bookInfo = explode ("#", $bookInfo);
+        $bookID = $bookInfo[0];
+        $bookEditionNo = $bookInfo[1];
+        $bookPublisher = $bookInfo[2];
+        //Insert to concerns relation
+        $insertConcernsQuery = "INSERT INTO concerns(request_id, book_id, edition_no, publisher) 
+                                    VALUES ('$lastAddedReqID','$bookID', '$bookEditionNo', '$bookPublisher')";
+        $insertConcernsQueryPrep = $mysqli->prepare($insertConcernsQuery);
+        $insertConcernsQueryResult = $insertConcernsQueryPrep->execute();
+        $insertConcernsQueryPrep->close();
 
         echo "<script>
             alert('Successfully Sent Request');
@@ -38,9 +50,9 @@
     <title>Create a Request</title>
 </head>
 <body>
+<form method="post">
 <div style="width: 49%; position: absolute; top: 0px; left: 100px;">
     <h1>Create a Request</h1>
-    <form method="post">
         <label>Title:</label><br>
         <input type="text" name="reqTitle" placeholder="Enter title"><br>
         <div style="margin-top: 50px;">
@@ -48,7 +60,6 @@
             <textarea type="text" name="reqBody" rows="15" cols="60" placeholder="Enter request body"></textarea><br>
         </div>
         <button style="margin-top: 25px;" name='submitReq' class="btn">Submit</button>
-    </form>
 </div>
 <div style="width: 49%; position: absolute; top: 0px; right: 100px;">
     <?php
@@ -67,7 +78,7 @@
         while($getAllBooksQueryRow = $getAllBooksQueryResult->fetch_assoc())
         {
             echo "<tr>
-                        <td><input type = \"radio\" name = \"selected\" value=\"".$getAllBooksQueryRow["book_id"]."\"></td>
+                        <td><input type = \"radio\" name = \"selected\" value=\"".$getAllBooksQueryRow["book_id"]."#". $getAllBooksQueryRow["edition_no"]."#". $getAllBooksQueryRow["publisher"]."\"></td>
                         <td>".$getAllBooksQueryRow['title']."</td>
                         <td>".$getAllBooksQueryRow['year']."</td>
                         <td>".$getAllBooksQueryRow['genre']."</td>
@@ -80,6 +91,7 @@
         echo "</table>";
     ?>
 </div>
+</form>
 </body>
 </html>
 <style>
