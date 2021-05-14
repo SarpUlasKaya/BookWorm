@@ -38,7 +38,7 @@
     $currentQuestionCount = $getQuestionCountQueryRow['question_count'];
     if(isset($_POST['create'])){
         echo "<script>
-            alert('Succesfully created quiz');
+            alert('Successfully created quiz');
             window.location.href='mainMenu.php';
         </script>";
     }
