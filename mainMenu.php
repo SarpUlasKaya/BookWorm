@@ -30,6 +30,7 @@
                             echo "<a style=\"margin-left: 25px; display: inline-block; color: darkgrey;text-decoration: navajowhite;\" href=\"createQuiz.php\">Create Quiz</a>";
                             echo "<a style=\"margin-left: 25px; display: inline-block; color: darkgrey;text-decoration: navajowhite;\" href=\"quizTable.php\">Solve Quiz</a>";
                             echo "<a style=\"margin-left: 25px; display: inline-block; color: darkgrey;text-decoration: navajowhite;\" href=\"createRequest.php\">Create Request</a>";
+                            echo "<a style=\"margin-left: 25px; display: inline-block; color: darkgrey;text-decoration: navajowhite;\" href=\"index.html\">Log Out</a>";
                         }
                         elseif ($resultAuthorAcc->num_rows==1){
                             echo "<a style=\"margin-left: 10px; display: inline-block; color: darkgrey;text-decoration: navajowhite;\" href=\"searchBooks.php\">Search Book</a>";
@@ -41,6 +42,7 @@
                             echo "<a style=\"margin-left: 25px; display: inline-block; color: darkgrey;text-decoration: navajowhite;\" href=\"createQuiz.php\">Create Quiz</a>";
                             echo "<a style=\"margin-left: 25px; display: inline-block; color: darkgrey;text-decoration: navajowhite;\" href=\"quizTable.php\">Solve Quiz</a>";
                             echo "<a style=\"margin-left: 25px; display: inline-block; color: darkgrey;text-decoration: navajowhite;\" href=\"createRequest.php\">Create Request</a>";
+                            echo "<a style=\"margin-left: 25px; display: inline-block; color: darkgrey;text-decoration: navajowhite;\" href=\"index.html\">Log Out</a>";
                         }
                         else{
                             echo "<a style=\"margin-left: 10px; display: inline-block; color: darkgrey;text-decoration: navajowhite;\" href=\"searchBooks.php\">Search Book</a>";
@@ -53,6 +55,7 @@
                             echo "<a style=\"margin-left: 25px; display: inline-block; color: darkgrey;text-decoration: navajowhite;\" href=\"quizTable.php\">Solve Quiz</a>";
                             echo "<a style=\"margin-left: 25px; display: inline-block; color: darkgrey;text-decoration: navajowhite;\" href=\"createRequest.php\">Create Request</a>";
                             echo "<a style=\"margin-left: 25px; display: inline-block; color: darkgrey;text-decoration: navajowhite;\" href=\"viewRequest.php\">View Request</a>";
+                            echo "<a style=\"margin-left: 25px; display: inline-block; color: darkgrey;text-decoration: navajowhite;\" href=\"index.html\">Log Out</a>";
                         }
                     ?>
                 </li>
