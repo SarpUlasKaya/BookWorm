@@ -191,7 +191,10 @@ $getBookInfosInListRowCount = mysqli_num_rows( $getBookInfosInListResult);
         }
     }
     ?>
+    a
 </div>
+<a style ="position: absolute; bottom: 0px; right: 0px;"href="mainMenu.php">Main Menu</a>
+<br></br>
 </body>
 </html>
 <style>
@@ -203,4 +206,16 @@ $getBookInfosInListRowCount = mysqli_num_rows( $getBookInfosInListResult);
         padding: 5px;
         text-align: left;
     }
+     a:link, a:visited {
+          background-color: #f44336;
+          color: white;
+          padding: 14px 25px;
+          text-align: center;
+          text-decoration: none;
+          display: inline-block;
+        }
+
+        a:hover, a:active {
+          background-color: red;
+        }
 </style>
