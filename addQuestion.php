@@ -16,6 +16,8 @@
     $currentQuestionCount = $getQuestionCountQueryRow['question_count'];
 
     if(isset($_POST['next'])){
+        if ( !empty($_POST['question']) && !empty($_POST['optionA']) && !empty($_POST['optionB']) && !empty($_POST['optionC']) &&
+                !empty($_POST['optionD']) && !empty($_POST['answer'])) {
         //insert quiz to question table
         $question = $_POST['question'];
         $optionA = $_POST['optionA'];
@@ -30,6 +32,10 @@
         $insertQuestionQueryPrep = $mysqli->prepare($insertQuestionQuery);
         $insertQuestionQueryResult = $insertQuestionQueryPrep->execute();
         $insertQuestionQueryPrep->close();
+        }
+        else {
+            echo "<script>alert(\"Please fill out all fields and pick a correct answer before adding a question.\");</script>";
+        }
     }
     //get number of added questions
     $getQuestionCountQuery = "SELECT COUNT(*) AS question_count FROM question WHERE quiz_id = '$myQuizID'";

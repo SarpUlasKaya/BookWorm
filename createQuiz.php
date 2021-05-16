@@ -4,30 +4,33 @@
     $thisUserID = $_SESSION['userID'];
     $lastAddedQuizID = -1;
     if(isset($_POST['continue'])){
-        $quizName = $_POST['quizName'];
-        $questionCount = $_POST['questionCount'];
-        //Insert into quiz table new quiz tuple
-        $insertQuizQuery = "INSERT INTO quiz(name, average_score, question_no, attempt_no) 
+        if ( !empty($_POST['quizName']) && !empty($_POST['questionCount'])) {
+            $quizName = $_POST['quizName'];
+            $questionCount = $_POST['questionCount'];
+            //Insert into quiz table new quiz tuple
+            $insertQuizQuery = "INSERT INTO quiz(name, average_score, question_no, attempt_no) 
                                     VALUES ('$quizName', 0, '$questionCount', 0)";
-        $insertQuizQueryPrep = $mysqli->prepare($insertQuizQuery);
-        $insertQuizQueryResult = $insertQuizQueryPrep->execute();
-        $insertQuizQueryPrep->close();
-        //Get last added quiz id
-        $getLastQuizQuery = "SELECT quiz_id FROM quiz ORDER BY quiz_id DESC LIMIT 1";
-        $getLastQuizQueryResult = $mysqli->query($getLastQuizQuery);
-        $getLastQuizQueryRow = $getLastQuizQueryResult->fetch_assoc();
-        $lastAddedQuizID = $getLastQuizQueryRow['quiz_id'];
-        //Insert to creates relation
-        $insertCreatesQuery = "INSERT INTO creates(user_id, quiz_id) 
+            $insertQuizQueryPrep = $mysqli->prepare($insertQuizQuery);
+            $insertQuizQueryResult = $insertQuizQueryPrep->execute();
+            $insertQuizQueryPrep->close();
+            //Get last added quiz id
+            $getLastQuizQuery = "SELECT quiz_id FROM quiz ORDER BY quiz_id DESC LIMIT 1";
+            $getLastQuizQueryResult = $mysqli->query($getLastQuizQuery);
+            $getLastQuizQueryRow = $getLastQuizQueryResult->fetch_assoc();
+            $lastAddedQuizID = $getLastQuizQueryRow['quiz_id'];
+            //Insert to creates relation
+            $insertCreatesQuery = "INSERT INTO creates(user_id, quiz_id) 
                                     VALUES ('$thisUserID','$lastAddedQuizID')";
-        $insertCreatesQueryPrep = $mysqli->prepare($insertCreatesQuery);
-        $insertCreatesQueryResult = $insertCreatesQueryPrep->execute();
-        $insertCreatesQueryPrep->close();
+            $insertCreatesQueryPrep = $mysqli->prepare($insertCreatesQuery);
+            $insertCreatesQueryResult = $insertCreatesQueryPrep->execute();
+            $insertCreatesQueryPrep->close();
 
-        header("location: addQuestion.php?quizID=".urlencode($lastAddedQuizID));
+            header("location: addQuestion.php?quizID=" . urlencode($lastAddedQuizID));
+        }
+        else {
+            echo "<script>alert(\"Please fill out the fields before you continue.\");</script>";
+        }
     }
-
-
 ?>
 <!DOCTYPE html>
 <html>
@@ -39,9 +42,9 @@
     <body>
     <?php
         echo "<form method=\"post\">
-            <label> Enter quiz name: <span><input name =\"quizName\" type=\"text\"></span></label><br>
-            <label> Enter question count: <span><input name =\"questionCount\" type=\"number\"></span></label><br>
-            <button style='margin-top: 50px' name=\"continue\" class=\"btn\">Continue</button>
+            <label> Enter quiz name: <span><input style='margin-top: 10px' name =\"quizName\" type=\"text\"></span></label><br>
+            <label> Enter question count: <span><input style='margin-top: 10px' name =\"questionCount\" type=\"number\"></span></label><br>
+            <button style='margin-top: 20px' name=\"continue\" class=\"btn\">Continue</button>
         </form>";
     ?>
     <a style ="position: absolute; bottom: 0px; right: 0px;"href="mainMenu.php">Main Menu</a>
