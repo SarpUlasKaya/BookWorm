@@ -14,32 +14,36 @@ $getSelectedChallengeResult = $mysqli->query($getSelectedChallenge);
 $getSelectedChallengeRow = $getSelectedChallengeResult->fetch_assoc();
 
 if(isset($_POST['takeChallenge'])){
-    $userGoal = $_POST['bookGoal'];
-    echo"Challenge ID: " . $selectedChallengeID;
-    echo "User GOAL: " . $userGoal;
-    //Check if user previously joined
-    $searchUserQuery = "SELECT * FROM joins WHERE user_id = '$thisUserID' AND challenge_id = $selectedChallengeID";
-    $searchUserQueryResult = $mysqli->query($searchUserQuery);
-    if($searchUserQueryResult->num_rows == 1){
-        echo " You have joined this challenge before";
-    }
-    else{
-        //Add new join relation tuple
-        $insertJoinsQuery = "INSERT INTO joins(user_id, challenge_id, goal) 
+    if (!empty($_POST['bookGoal'])) {
+        $userGoal = $_POST['bookGoal'];
+        //echo"Challenge ID: " . $selectedChallengeID;
+        //echo "User GOAL: " . $userGoal;
+        //Check if user previously joined
+        $searchUserQuery = "SELECT * FROM joins WHERE user_id = '$thisUserID' AND challenge_id = $selectedChallengeID";
+        $searchUserQueryResult = $mysqli->query($searchUserQuery);
+        if ($searchUserQueryResult->num_rows == 1) {
+            echo "<script>alert(\"You have joined this challenge before.\");</script>";
+        } else {
+            //Add new joins relation tuple
+            $insertJoinsQuery = "INSERT INTO joins(user_id, challenge_id, goal) 
                                 VALUES ('$thisUserID', '$selectedChallengeID', $userGoal)";
-        $insertJoinsQueryPrep = $mysqli->prepare($insertJoinsQuery);
-        $insertJoinsQueryResult = $insertJoinsQueryPrep->execute();
-        $insertJoinsQueryPrep->close();
-        //update reading challange pledged book count
-        $updateRCQuery = "UPDATE reading_challenge SET books_pledged = books_pledged + '$userGoal' WHERE reading_challenge.challenge_id = '$selectedChallengeID'";
-        $updateRCQueryPrep = $mysqli->prepare($updateRCQuery);
-        $updateRCQueryResult = $updateRCQueryPrep->execute();
-        $updateRCQueryPrep->close();
-        //update participant count
-        $updateRCQuery = "UPDATE reading_challenge SET participant_count = participant_count + 1 WHERE reading_challenge.challenge_id = '$selectedChallengeID'";
-        $updateRCQueryPrep = $mysqli->prepare($updateRCQuery);
-        $updateRCQueryResult = $updateRCQueryPrep->execute();
-        $updateRCQueryPrep->close();
+            $insertJoinsQueryPrep = $mysqli->prepare($insertJoinsQuery);
+            $insertJoinsQueryResult = $insertJoinsQueryPrep->execute();
+            $insertJoinsQueryPrep->close();
+            //update the reading challenge's pledged book count
+            $updateRCQuery = "UPDATE reading_challenge SET books_pledged = books_pledged + '$userGoal' WHERE reading_challenge.challenge_id = '$selectedChallengeID'";
+            $updateRCQueryPrep = $mysqli->prepare($updateRCQuery);
+            $updateRCQueryResult = $updateRCQueryPrep->execute();
+            $updateRCQueryPrep->close();
+            //update participant count
+            $updateRCQuery = "UPDATE reading_challenge SET participant_count = participant_count + 1 WHERE reading_challenge.challenge_id = '$selectedChallengeID'";
+            $updateRCQueryPrep = $mysqli->prepare($updateRCQuery);
+            $updateRCQueryResult = $updateRCQueryPrep->execute();
+            $updateRCQueryPrep->close();
+        }
+    }
+    else {
+        echo "<script>alert(\"Please pledge a valid number of books to join the challenge.\");</script>";
     }
 }
 //display current challenges

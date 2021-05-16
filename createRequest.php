@@ -3,42 +3,47 @@
     include("config.php");
     $thisUserID = $_SESSION['userID'];
     if(isset($_POST['submitReq'])){
-        $reqTitle = $_POST['reqTitle'];
-        $reqBody = $_POST['reqBody'];
-        //Insert into request table new tuple
-        $insertRequestQuery = "INSERT INTO request(text, title) 
+        if (!empty($_POST['reqTitle']) && !empty($_POST['reqBody']) && !empty($_POST['selected'])) {
+            $reqTitle = $_POST['reqTitle'];
+            $reqBody = $_POST['reqBody'];
+            //Insert into request table new tuple
+            $insertRequestQuery = "INSERT INTO request(text, title) 
                                         VALUES ('$reqBody', '$reqTitle')";
-        $insertRequestQueryPrep = $mysqli->prepare($insertRequestQuery);
-        $insertRequestQueryResult = $insertRequestQueryPrep->execute();
-        $insertRequestQueryPrep->close();
-        //Get last added request id
-        $getLastReqQuery = "SELECT request_id FROM request ORDER BY request_id DESC LIMIT 1";
-        $getLastReqQueryResult = $mysqli->query($getLastReqQuery);
-        $getLastReqQueryRow = $getLastReqQueryResult->fetch_assoc();
-        $lastAddedReqID = $getLastReqQueryRow['request_id'];
-        //Insert to sends relation
-        $insertSendsQuery = "INSERT INTO sends(user_id, request_id) 
+            $insertRequestQueryPrep = $mysqli->prepare($insertRequestQuery);
+            $insertRequestQueryResult = $insertRequestQueryPrep->execute();
+            $insertRequestQueryPrep->close();
+            //Get last added request id
+            $getLastReqQuery = "SELECT request_id FROM request ORDER BY request_id DESC LIMIT 1";
+            $getLastReqQueryResult = $mysqli->query($getLastReqQuery);
+            $getLastReqQueryRow = $getLastReqQueryResult->fetch_assoc();
+            $lastAddedReqID = $getLastReqQueryRow['request_id'];
+            //Insert to sends relation
+            $insertSendsQuery = "INSERT INTO sends(user_id, request_id) 
                                     VALUES ('$thisUserID','$lastAddedReqID')";
-        $insertSendsQueryPrep = $mysqli->prepare($insertSendsQuery);
-        $insertSendsQueryResult = $insertSendsQueryPrep->execute();
-        $insertSendsQueryPrep->close();
-        //Select the book that req is concerned about
-        $bookInfo = $_POST['selected'];
-        $bookInfo = explode ("#", $bookInfo);
-        $bookID = $bookInfo[0];
-        $bookEditionNo = $bookInfo[1];
-        $bookPublisher = $bookInfo[2];
-        //Insert to concerns relation
-        $insertConcernsQuery = "INSERT INTO concerns(request_id, book_id, edition_no, publisher) 
+            $insertSendsQueryPrep = $mysqli->prepare($insertSendsQuery);
+            $insertSendsQueryResult = $insertSendsQueryPrep->execute();
+            $insertSendsQueryPrep->close();
+            //Select the book that req is concerned about
+            $bookInfo = $_POST['selected'];
+            $bookInfo = explode("#", $bookInfo);
+            $bookID = $bookInfo[0];
+            $bookEditionNo = $bookInfo[1];
+            $bookPublisher = $bookInfo[2];
+            //Insert to concerns relation
+            $insertConcernsQuery = "INSERT INTO concerns(request_id, book_id, edition_no, publisher) 
                                     VALUES ('$lastAddedReqID','$bookID', '$bookEditionNo', '$bookPublisher')";
-        $insertConcernsQueryPrep = $mysqli->prepare($insertConcernsQuery);
-        $insertConcernsQueryResult = $insertConcernsQueryPrep->execute();
-        $insertConcernsQueryPrep->close();
+            $insertConcernsQueryPrep = $mysqli->prepare($insertConcernsQuery);
+            $insertConcernsQueryResult = $insertConcernsQueryPrep->execute();
+            $insertConcernsQueryPrep->close();
 
-        echo "<script>
-            alert('Successfully Sent Request');
-            window.location.href='mainMenu.php';
-        </script>";
+            echo "<script>
+                alert('Successfully Sent Request');
+                window.location.href='mainMenu.php';
+            </script>";
+        }
+        else {
+            echo "<script>alert(\"Please fill out the fields and indicate which book your request concerns before submitting it.\");</script>";
+        }
     }
     //List all books
     $getAllBooksQuery = "SELECT * FROM books NATURAL JOIN edition";

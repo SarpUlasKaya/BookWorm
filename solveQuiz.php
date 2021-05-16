@@ -8,13 +8,13 @@
     $thisQuizID = $_GET['quizID'];
     $questionID = $_GET['questionID'];
     $quizScore = $_GET['quizScore'];
-    echo "current Index: " . $questionID;
+    //echo "current Index: " . $questionID;
 
     $questionCountQuery = "SELECT question_no FROM quiz WHERE  quiz_id = '$thisQuizID'";
     $questionCountQueryResult = $mysqli->query($questionCountQuery);
     $questionCountQueryRow = $questionCountQueryResult->fetch_assoc();
     $questionCount = $questionCountQueryRow['question_no'];
-    echo "question count: " . $questionCount;
+    //echo "question count: " . $questionCount;
 
     $getQuestionsQuery = "SELECT * FROM question WHERE quiz_id = '$thisQuizID' AND question_id = '$questionID'";
     $getQuestionsQueryResult = $mysqli->query($getQuestionsQuery);

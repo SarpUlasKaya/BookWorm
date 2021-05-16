@@ -3,25 +3,30 @@
     include("config.php");
     $librarianID = $_SESSION['userID'];
     if(isset($_POST['submit'])){
-        $rcName = $_POST['RCName'];
-        $expireDate = $_POST['expireDate'];
+        if ( !empty($_POST['RCName']) && !empty($_POST['expireDate'])) {
+            $rcName = $_POST['RCName'];
+            $expireDate = $_POST['expireDate'];
 
-        //Add RC to RC table
-        $insertRCQuery = "INSERT INTO reading_challenge(name, time_limit, participant_count, books_pledged) 
-                                VALUES ('$rcName', '$expireDate', 0, 0)";
-        $insertRCQueryPrep = $mysqli->prepare($insertRCQuery);
-        $insertRCQueryResult = $insertRCQueryPrep->execute();
-        $insertRCQueryPrep->close();
-        //Insert relation
-        $getLastRowQuery = "SELECT * FROM reading_challenge ORDER BY challenge_id DESC LIMIT 1";
-        $getLastRowQueryResult = $mysqli->query($getLastRowQuery);
-        $getLastRowQueryRow = $getLastRowQueryResult->fetch_assoc();
-        $lastAddedChallengeID = $getLastRowQueryRow['challenge_id'];
-        $insertHostRelationQuery = "INSERT INTO hosts(librarian_id, challenge_id) 
-                                VALUES ('$librarianID', '$lastAddedChallengeID')";
-        $insertHostRelationQueryPrep = $mysqli->prepare($insertHostRelationQuery);
-        $insertHostRelationQueryResult = $insertHostRelationQueryPrep->execute();
-        $insertHostRelationQueryPrep->close();
+            //Add Reading Challenge to Reading Challenge table
+            $insertRCQuery = "INSERT INTO reading_challenge(name, time_limit, participant_count, books_pledged) 
+                                    VALUES ('$rcName', '$expireDate', 0, 0)";
+            $insertRCQueryPrep = $mysqli->prepare($insertRCQuery);
+            $insertRCQueryResult = $insertRCQueryPrep->execute();
+            $insertRCQueryPrep->close();
+            //Insert relation
+            $getLastRowQuery = "SELECT * FROM reading_challenge ORDER BY challenge_id DESC LIMIT 1";
+            $getLastRowQueryResult = $mysqli->query($getLastRowQuery);
+            $getLastRowQueryRow = $getLastRowQueryResult->fetch_assoc();
+            $lastAddedChallengeID = $getLastRowQueryRow['challenge_id'];
+            $insertHostRelationQuery = "INSERT INTO hosts(librarian_id, challenge_id) 
+                                    VALUES ('$librarianID', '$lastAddedChallengeID')";
+            $insertHostRelationQueryPrep = $mysqli->prepare($insertHostRelationQuery);
+            $insertHostRelationQueryResult = $insertHostRelationQueryPrep->execute();
+            $insertHostRelationQueryPrep->close();
+        }
+        else {
+            echo "<script>alert(\"Please pick a name and a time limit for the challenge before adding it.\");</script>";
+        }
     }
     //display current challenges
     $getAllChallengesQuery = "SELECT * FROM reading_challenge";
