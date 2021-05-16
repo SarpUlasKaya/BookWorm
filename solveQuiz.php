@@ -103,7 +103,8 @@
              </form>";
     }
     else{
-        echo"<form method='post'><button name='finish'>Finish Attempt</button></form>";
+        echo "You have answered all of the questions, your score is " . $quizScore . " out of " . $questionCount . ".<br><br>";
+        echo "<form method='post'><button name='finish'>Finish Attempt</button></form>";
     }
     ?>
 </table>
