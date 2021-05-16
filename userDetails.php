@@ -40,7 +40,7 @@ if( isset($_POST['postSubmit'])) {
     $insertNewPostQueryResult = $insertNewPostQueryPrep->execute();
     $insertNewPostQueryPrep->close();
     if ($insertNewPostQueryResult) {
-        echo 'Successfully inserted new post.';
+        //echo 'Successfully inserted new post.';
     }
     //add post-user relation
     $getLastAddedPostIDQuery = "SELECT * FROM post ORDER BY post_id DESC LIMIT 1";
@@ -54,7 +54,7 @@ if( isset($_POST['postSubmit'])) {
     $insertNewPostsRelationQueryResult = $insertNewPostsRelationQueryPrep->execute();
     $insertNewPostsRelationQueryPrep->close();
     if ($insertNewPostsRelationQueryResult) {
-        echo 'Added new posts Relation';
+        //echo 'Added new posts Relation';
     }
 }
 if( isset($_POST['like'])) {
@@ -63,13 +63,13 @@ if( isset($_POST['like'])) {
     $getRatesInfoQuery = "SELECT * FROM rates_post WHERE rates_post.post_id = '$likedPostID' AND rates_post.user_id = '$thisUserID'";
     $getRatesInfoQueryResult = $mysqli->query($getRatesInfoQuery . " AND rates_post.is_like = true");
     if($getRatesInfoQueryResult->num_rows==1) {
-        echo "You have already liked this post.";
+        echo "<script>alert(\"You have already liked this post.\");</script>";
     }
     else{
         //Check if user previously disliked book
         $getRatesInfoDislikeQueryResult = $mysqli->query($getRatesInfoQuery . " AND rates_post.is_like = false");
         if($getRatesInfoDislikeQueryResult->num_rows == 1) {
-            echo " You have disliked this book previously";
+            //echo " You have disliked this book previously";
             //Update previously disliked rates relation as like
             $updateRatesQuery = "UPDATE rates_post SET is_like = TRUE WHERE rates_post.post_id = '$likedPostID' AND rates_post.user_id = '$thisUserID'";
             $updateRatesQueryPrep = $mysqli->prepare($updateRatesQuery);
@@ -102,13 +102,13 @@ if( isset($_POST['dislike'])) {
     $getRatesInfoQuery = "SELECT * FROM rates_post WHERE rates_post.post_id = '$dislikedPostID' AND rates_post.user_id = '$thisUserID'";
     $getRatesInfoLikeQueryResult = $mysqli->query($getRatesInfoQuery . " AND rates_post.is_like = false");
     if($getRatesInfoLikeQueryResult->num_rows==1) {
-        echo "You have already disliked this post.";
+        echo "<script>alert(\"You have already disliked this post.\");</script>";
     }
     else{
         //Check if user previously liked book
         $getRatesInfoDislikeQueryResult = $mysqli->query($getRatesInfoQuery . " AND rates_post.is_like = true");
         if($getRatesInfoDislikeQueryResult->num_rows==1) {
-            echo " You have liked this post previously";
+            //echo " You have liked this post previously";
             //Update previously liked rates relation as dislike
             $updateRatesQuery = "UPDATE rates_post SET is_like = FALSE WHERE rates_post.post_id = '$dislikedPostID' AND rates_post.user_id = '$thisUserID'";
             $updateRatesQueryPrep = $mysqli->prepare($updateRatesQuery);

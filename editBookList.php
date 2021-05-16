@@ -191,7 +191,6 @@ $getBookInfosInListRowCount = mysqli_num_rows( $getBookInfosInListResult);
         }
     }
     ?>
-    a
 </div>
 <a style ="position: absolute; bottom: 0px; right: 0px;"href="mainMenu.php">Main Menu</a>
 <br></br>
