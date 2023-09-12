@@ -7,11 +7,15 @@ $editionNO = $_GET["editionNo"];
 $bookEditionPublisher = $_GET["publisher"];
 $userID = $_SESSION['userID'];
 //echo "BOOK ID: " . $bookID . " Edition NO: " . $editionNO . "Publisher: " . $bookEditionPublisher . " USER ID: " . $userID . "\r\n";
+$recommendBookTo = false;
+if($_GET['recommendBookTo']){
+    $recommendBookTo = $_GET['recommendBookTo'];
+}
 if( isset($_POST['newPageCountSubmit'])) {
     $newCurrentPageNum = $_POST['newCurrentPageNum'];
     //Mark new Progress
-    $markProgressQuery = "INSERT INTO mark_progress(current_page, progress_date, user_id, book_id) 
-                            VALUES ('$newCurrentPageNum', NOW(),'$userID', '$bookID')";
+    $markProgressQuery = "INSERT INTO mark_progress(current_page, progress_date, user_id, book_id, edition_no, publisher) 
+                            VALUES ('$newCurrentPageNum', NOW(),'$userID', '$bookID','$editionNO', '$bookEditionPublisher')";
     $markProgressQueryPrep = $mysqli->prepare($markProgressQuery);
     $markProgressQueryResult = $markProgressQueryPrep->execute();
     $markProgressQueryPrep->close();
@@ -74,7 +78,7 @@ if( isset($_POST['dislike'])) {
             $updateRatesQueryPrep = $mysqli->prepare($updateRatesQuery);
             $updateRatesQueryResult = $updateRatesQueryPrep->execute();
             $updateRatesQueryPrep->close();
-            //Decrease book dislike count
+            //Decrease book like count
             $decreaseBookLikeQuery = "UPDATE edition SET like_count = like_count - 1 WHERE edition.book_id = '$bookID' AND edition.edition_no = '$editionNO' AND edition.publisher = '$bookEditionPublisher'";
             $decreaseBookLikeQueryPrep = $mysqli->prepare($decreaseBookLikeQuery);
             $decreaseBookLikeQueryResult = $decreaseBookLikeQueryPrep->execute();
@@ -136,7 +140,17 @@ $getAuthorInfoQueryResult = $mysqli->query($getAuthorInfoQuery);
 $getAuthorInfoQueryRow = $getAuthorInfoQueryResult->fetch_assoc();
 $authorID = $getAuthorInfoQueryRow['author_id'];
 $authorName = ($mysqli->query("SELECT name FROM users WHERE user_id = '$authorID'"))->fetch_assoc()['name'];
-
+if( isset($_POST['recommendBook'])){
+    $insertRecommendsQuery = "INSERT INTO recommends(user_id, friend_id, edition_no, publisher, book_id) 
+                                VALUES ('$userID', '$recommendBookTo', '$editionNO', '$bookEditionPublisher', $bookID)";
+    $insertRecommendsQueryPrep = $mysqli->prepare($insertRecommendsQuery);
+    $insertRecommendsQueryResult = $insertRecommendsQueryPrep->execute();
+    $insertRecommendsQueryPrep->close();
+}
+//Search if this book is recommended previously
+$searchRecommendsQuery = "SELECT COUNT(*) AS recommended_before FROM recommends WHERE edition_no = '$editionNO' AND publisher = '$bookEditionPublisher' AND book_id = '$bookID' AND user_id = '$userID' AND friend_id = '$recommendBookTo'";
+$searchRecommendsQueryResult = $mysqli->query($searchRecommendsQuery);
+$searchRecommendsQueryRow = $searchRecommendsQueryResult->fetch_assoc();
 ?>
 
 <!DOCTYPE html>
@@ -179,6 +193,18 @@ $authorName = ($mysqli->query("SELECT name FROM users WHERE user_id = '$authorID
         <button name="like"><img src="img/like.png" alt="Like" style="position: relative; height: 40px; width: 40px;"></button>
         <button name="dislike"><img src="img/dislike.png" alt="Dislike" style="position: relative; height: 40px; width: 40px;"></button>
     </form>
+    <?php
+        if($recommendBookTo && $searchRecommendsQueryRow['recommended_before'] == 0){
+            echo "<form method=\"post\" style='margin-top: 20px'>
+                    <button name='recommendBook' class='btn'> RECOMMEND BOOK </button>
+                  </form>";
+        }
+        else if($recommendBookTo && $searchRecommendsQueryRow['recommended_before'] == 1){
+            echo "<form method=\"post\" style='margin-top: 20px'>
+                    <button name='recommendBook' class='btn-disable'> PREVIOUSLY RECOMMENDED </button>
+                  </form>";
+        }
+    ?>
 </div>
 <div style="width: 49%; position: absolute; top: 0px; right: 0px;">
     <h1>
@@ -213,6 +239,30 @@ $authorName = ($mysqli->query("SELECT name FROM users WHERE user_id = '$authorID
 </body>
 </html>
 <style>
+    .btn {
+        background-color: cadetblue;
+        border: none;
+        color: white;
+        padding: 15px 32px;
+        text-align: center;
+        text-decoration: none;
+        display: inline-block;
+        font-size: 16px;
+    }
+    .btn-disable
+    {
+        cursor: not-allowed;
+        pointer-events: none;
+        background-color: cadetblue;
+        border: none;
+        color: white;
+        padding: 15px 32px;
+        text-align: center;
+        text-decoration: none;
+        display: inline-block;
+        font-size: 16px;
+
+    }
     table, th, td {
         border: 1px solid black;
         border-collapse: collapse;

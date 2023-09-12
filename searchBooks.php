@@ -1,5 +1,5 @@
 <?php
-	include_once 'config.php'
+	include_once 'config.php';
 ?>
 <!DOCTYPE html>
 <html>
@@ -12,27 +12,36 @@
 		<table align = "CENTER">
 		<tr>
 			<td>     </td>
+            <td>Book Name:</td>
 			<td>Genre:</td>
 			<td>Author:</td>
-			<td>Year:</td>
+			<td colspan="2">Year:</td>
 		</tr>
 		<tr>
-			<td>Sort by:</td>
+			<td>Search by:</td>
+            <td><input type = "text" name = "listName" value = "" placeholder = "Search by name"></td>
 			<td><input type = "text" name = "listGenre" value = "" placeholder = "Genre"></td>
 			<td><input type = "text" name = "listAuthor" value = "" placeholder = "Author"></td>
-			<td><input type = "date" name = "listYear" value = "" placeholder = "Year"></td>
+			<td><input type = "date" name = "listYear"></td>
+            <td><input type = "date" name = "listYear2"></td>
+
 		</tr>
 		<tr>
-			<td>Search:</td>
-			<td><input type = "text" name = "listName" value = "" placeholder = "Search by name"></td>
 			<td><input type = "submit" name = "Search" value = "Search"</td>
+		</tr>
+		<tr>
+		    <a style ="position: absolute; bottom: 0px; right: 0px;"href="mainMenu.php">Main Menu</a>
+            <br></br>
 		</tr>
 		</table>
 	</form>
 		
 	<?php
-    // if search is done using only search by name
-    $listSql = "SELECT * FROM books INNER JOIN edition ON books.book_id = edition.book_id";
+    $recommendBookTo = false;
+    if(!empty($_GET['recommendBookTo'])){
+        $recommendBookTo = $_GET['recommendBookTo'];
+    }
+    $listSql = "SELECT * FROM books NATURAL JOIN edition";
 
     if( isset($_POST['Search']))
     {
@@ -40,12 +49,11 @@
         $listName = $_POST['listName'];
         $listAuthor = $_POST['listAuthor'];
         $listYear = $_POST['listYear'];
+        $listYear2 = $_POST['listYear2'];
         $listGenre = $_POST['listGenre'];
 
-
-
         // if not all the fields are empty, continue constructing query
-        if( !empty($listName) || !empty($listAuthor)  || !empty($listYear)  ||  !empty($listGenre))
+        if( !empty($listName) || !empty($listAuthor)  || !empty($listYear)|| !empty($listYear2)   ||  !empty($listGenre))
         {
             $listSql .= " WHERE ";
             $andCount = 0;
@@ -58,20 +66,12 @@
                     $listSql .= " AND title like '%$listName%'";
                 }
             }
-            if(!empty($listAuthor)) {
-                $andCount++;
-                if($andCount == 1) {
-                    $listSql .= "book_id IN (SELECT book_id FROM users INNER JOIN publishes ON users.user_id = publishes.author_id WHERE name LIKE '%$listAuthor%')";
-                } else {
-                    $listSql .= " AND book_id IN (SELECT book_id FROM users INNER JOIN publishes ON users.user_id = publishes.author_id WHERE name LIKE '%$listAuthor%')";
-                }
-            }
             if(!empty($listYear)) {
                 $andCount++;
                 if ($andCount == 1) {
-                    $listSql .= "year like '%$listYear%'";
+                    $listSql .= "year BETWEEN '$listYear' AND '$listYear2'";
                 } else {
-                    $listSql .= " AND year like '%$listYear%'";
+                    $listSql .= " AND year BETWEEN '$listYear' AND '$listYear2'";
                 }
             }
             if(!empty($listGenre)) {
@@ -82,12 +82,19 @@
                     $listSql .= " AND genre like '%$listGenre%'";
                 }
             }
+            if(!empty($listAuthor)) {
+                $andCount++;
+                if($andCount == 1) {
+                    $listSql .= "edition.book_id IN (SELECT book_id FROM users INNER JOIN publishes ON users.user_id = publishes.author_id WHERE name LIKE '%$listAuthor%')";
+                } else {
+                    $listSql .= " AND edition.book_id IN (SELECT book_id FROM users INNER JOIN publishes ON users.user_id = publishes.author_id WHERE name LIKE '%$listAuthor%')";
+                }
+            }
         }
         $result = mysqli_query($mysqli, $listSql);
         $resultCheck = mysqli_num_rows( $result);
         echo"<h2>Results</h2>
-            <p>To add a caption to a table, use the caption tag.</p>
-            <table style=\"width:75%\">
+            <table style=\"width:100%\">
             <tr>
                 <th>Book Name</th>
                 <th>Year</th>          
@@ -102,15 +109,14 @@
             while( $row = mysqli_fetch_assoc($result))
             {
                 echo "<tr>
-                        <td><a href=\"bookDetails.php?bookId=" . urlencode($row['book_id']) . "&editionNo=" . urlencode($row['edition_no']) . "&publisher=" . urlencode($row['publisher']) . "\">".$row['title']."</a></td>
+                        <td><a href=\"bookDetails.php?bookId=" . urlencode($row['book_id']) . "&editionNo=" . urlencode($row['edition_no']) . "&publisher=" . urlencode($row['publisher']) . "&recommendBookTo=". urlencode($recommendBookTo) .  "\">".$row['title']."</a></td>
                         <td>".$row['year']."</td>
                         <td>".$row['genre']."</td>
                         <td>".$row['book_id']."</td>
                         <td>".$row['edition_no']."</td>
                         <td>".$row['publisher']."</td>
                         <td>".$row['page_count']."</td>
-                    </tr>
-              ";
+                    </tr>";
             }
             echo "</table>";
         }
@@ -126,5 +132,17 @@
     th, td {
         padding: 5px;
         text-align: left;
+    }
+    a:link, a:visited {
+      background-color: #f44336;
+      color: white;
+      padding: 14px 25px;
+      text-align: center;
+      text-decoration: none;
+      display: inline-block;
+    }
+
+    a:hover, a:active {
+      background-color: red;
     }
 </style>

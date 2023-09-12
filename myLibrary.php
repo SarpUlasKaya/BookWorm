@@ -5,28 +5,33 @@ include("config.php");
 $userID = $_SESSION['userID'];
 
 if(isset($_POST['addNewBookList'])){
-    $newBookListName = $_POST['newBookListName'];
-    //Create new Booklist
-    $createBookListQuery = "INSERT INTO book_list(name, created_at, book_count) 
+    if ( !empty($_POST['newBookListName'])) {
+        $newBookListName = $_POST['newBookListName'];
+        //Create new Booklist
+        $createBookListQuery = "INSERT INTO book_list(name, created_at, book_count) 
                                 VALUES ('$newBookListName', NOW(), 0)";
-    $createBookListQueryPrep = $mysqli->prepare($createBookListQuery);
-    $createBookListQueryResult = $createBookListQueryPrep->execute();
-    $createBookListQueryPrep->close();
+        $createBookListQueryPrep = $mysqli->prepare($createBookListQuery);
+        $createBookListQueryResult = $createBookListQueryPrep->execute();
+        $createBookListQueryPrep->close();
 
-    //Get Lastly Created bookList
-    $getLastRowBookListIDQuery = "SELECT book_list_id FROM book_list ORDER BY book_list_id DESC LIMIT 1";
-    $getLastRowBookListIDQueryResult = $mysqli->query($getLastRowBookListIDQuery);
-    $getLastRowBookListIDQueryRow = $getLastRowBookListIDQueryResult->fetch_assoc();
-    $mostRecentBookListID = $getLastRowBookListIDQueryRow['book_list_id'];
+        //Get Lastly Created bookList
+        $getLastRowBookListIDQuery = "SELECT book_list_id FROM book_list ORDER BY book_list_id DESC LIMIT 1";
+        $getLastRowBookListIDQueryResult = $mysqli->query($getLastRowBookListIDQuery);
+        $getLastRowBookListIDQueryRow = $getLastRowBookListIDQueryResult->fetch_assoc();
+        $mostRecentBookListID = $getLastRowBookListIDQueryRow['book_list_id'];
 
-    //Create new prepares relation
-    $createPreparesQuery = "INSERT INTO prepares(user_id, book_list_id) 
+        //Create new prepares relation
+        $createPreparesQuery = "INSERT INTO prepares(user_id, book_list_id) 
                                 VALUES ('$userID',$mostRecentBookListID)";
-    $createPreparesQueryPrep = $mysqli->prepare($createPreparesQuery);
-    $createPreparesQueryResult = $createPreparesQueryPrep->execute();
-    $createPreparesQueryPrep->close();
+        $createPreparesQueryPrep = $mysqli->prepare($createPreparesQuery);
+        $createPreparesQueryResult = $createPreparesQueryPrep->execute();
+        $createPreparesQueryPrep->close();
 
-    header("location: myLibrary.php");
+        header("location: myLibrary.php");
+    }
+    else{
+        echo "<script>alert(\"Please fill out the title field before adding a new book list.\");</script>";
+    }
 }
 
 //Get All BookList Table and Display
@@ -42,6 +47,7 @@ $getBookListsQueryRowCount = mysqli_num_rows( $getBookListsQueryResult);
 </head>
 <body align = \"CENTER\">
     <div style="width: 49%; position: absolute; top: 0px; left: 150px;">
+        <h1>Your Book Lists</h1>
         <table style=\"width:75%\">
             <tr>
                 <th>Book List Name</th>
@@ -66,14 +72,18 @@ $getBookListsQueryRowCount = mysqli_num_rows( $getBookListsQueryResult);
             ?>
     </div>
     <div style="width: 49%; position: absolute; top: 0px; left: 750px;">
+        <h1>Create a New Book List</h1>
         <form method="post">
-            <label>ADD New Book List<input type="text" name="newBookListName"/></label> <br><br>
+            <label>Title: <input type="text" name="newBookListName"/></label> <br><br>
             <input type="submit" name="addNewBookList" value="Submit" />
         </form>
+
     </div>
+
 </body>
 </html>
 <style>
+
     table, th, td {
         border: 1px solid black;
         border-collapse: collapse;
@@ -82,4 +92,5 @@ $getBookListsQueryRowCount = mysqli_num_rows( $getBookListsQueryResult);
         padding: 5px;
         text-align: left;
     }
+
 </style>

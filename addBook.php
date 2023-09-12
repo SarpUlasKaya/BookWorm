@@ -10,10 +10,12 @@
     </title>
 </head>
 <body>
+<h1>
+    Add a New Book
+</h1>
 <div>
     <?php
     if (isset($_POST['addBook'])) {
-        echo 'addBook isset entered.';
         $bookTitle = $_POST['bookTitle'];
         $year = $_POST['year'];
         $genre = $_POST['genre'];
@@ -27,29 +29,29 @@
         $format = $_POST['format'];
 
         if ( !empty($bookTitle) && !empty($year) && !empty($genre) && !empty($summary) &&
-            !empty($editionNo) && !empty($publisher) && !empty($publishYear) && !empty($language)) {
+            !empty($editionNo) && !empty($publisher) && !empty($publishYear) && !empty($language) && !empty($totalPageCount)) {
             //SEARCH IF BOOK ALREADY EXISTS
             $queryIsBookExists = " select book_id from books where title = '$bookTitle' and year = '$year' and genre = '$genre' and summary = '$summary'";
             if($isBookExist = $mysqli->query($queryIsBookExists)) {
                 $authorRow = null;
                 if($isBookExist->num_rows==1) {
-                    echo "BOOK EXISTS!!";
+                    echo "This book already exists. ";
                     $bookRow = $isBookExist->fetch_assoc();
                     $_SESSION['bookID'] = $bookRow['book_id'];
-                    echo $_SESSION['bookID'];
+                    // echo $_SESSION['bookID'];
                     $bookId = $_SESSION['bookID'];
                     $queryAuthor = $mysqli->query("SELECT author_id FROM publishes INNER JOIN books ON books.book_id = publishes.book_id WHERE books.book_id = '$bookId'");
                     $authorRow = $queryAuthor->fetch_assoc();
                 }
                 else {
                     //ADD NEW BOOK TO BOOK TABLE
-                    $queryBook = "INSERT INTO books( book_id, title, genre, year, summary) VALUES (LAST_INSERT_ID(),'$bookTitle', '$genre',
-                                                                        '$year', '$summary')";
+                    $queryBook = "INSERT INTO books(title, genre, year, summary)
+                                    VALUES ('$bookTitle', '$genre', '$year', '$summary')";
                     $bookInsert = $mysqli->prepare($queryBook);
                     $resultBookInsert = $bookInsert->execute();
                     $bookInsert->close();
                     if($resultBookInsert) {
-                        echo 'Successfully inserted new book.';
+                        echo 'Successfully added a new book. ';
                     }
                     //GET LAST INSERTED BOOK ID
                     $lastBookRow = $mysqli->query("SELECT book_id FROM books ORDER BY book_id DESC LIMIT 1");
@@ -57,13 +59,13 @@
                     $lastBookID = $row['book_id'];
                     if($lastBookID) {
                         $_SESSION['bookID'] = $lastBookID;
-                        echo 'Successfully get last book ID';
+                        //echo 'Successfully get last book ID';
                     }
                     //ADD PUBLISHER-BOOK TUPLE TO PUBLISHES RELATION
                     $authorID = $_SESSION['userID'];
                     $authorRow['author_id'] = $authorID;
-                    echo "Author id: " . $authorID . "\r\n";
-                    echo "Book id:" . $lastBookID . "\r\n";
+                    //echo "Author id: " . $authorID . "\r\n";
+                    //echo "Book id:" . $lastBookID . "\r\n";
 
                     $queryPublishes = "INSERT INTO publishes( book_id, author_id) 
                             VALUES ('$lastBookID', '$authorID')";
@@ -71,19 +73,17 @@
                     $resultPublishesInsert = $publishesInsert->execute();
                     $publishesInsert->close();
                     if ($resultPublishesInsert) {
-                        echo 'Successfully inserted new publishes relation';
+                        //echo 'Successfully inserted new publishes relation';
                     }
                 }
                 $bookID = $_SESSION['bookID'];
-                echo "test 1";
                 //Check if the author trying to add a new edition of an existing is same with the original book publisher
                 if ($authorRow && $authorRow['author_id'] == $_SESSION['userID']) {
-                    echo "test 2";
                     //SEARCH IF EDITION ALREADY EXISTS
                     $queryIsEditionExists = " select book_id, edition_no, publisher from edition where book_id = '$bookID' and edition_no = '$editionNo' and publisher = '$publisher'";
                     if($isEditionExist = $mysqli->query($queryIsEditionExists)) {
                         if($isEditionExist->num_rows==1) {
-                            echo "EDITION EXISTS!!";
+                            echo "This edition of the book already exists. ";
                         }
                         else {
                             //ADD EDITION OF BOOK TO EDITION TABLE
@@ -94,7 +94,7 @@
                             $resultEditionInsert = $editionInsert->execute();
                             $editionInsert->close();
                             if ($resultEditionInsert) {
-                                echo 'Successfully inserted new edition';
+                                echo 'Successfully added a new edition. ';
                             }
                         }
                     }
@@ -172,9 +172,29 @@
         <br></br>
         <input type="submit" name="addBook" onclick="checkForEmptyInputs()">
     </div>
+    <div>
+        <a style ="position: absolute; bottom: 0px; right: 0px;"href="mainMenu.php">Main Menu</a>
+        <br></br>
+    </div>
 </form>
 </body>
 </html>
+
+<style>
+a:link, a:visited {
+  background-color: #f44336;
+  color: white;
+  padding: 14px 25px;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+}
+
+a:hover, a:active {
+  background-color: red;
+}
+</style>
+
 <script>
     function checkForEmptyInputs() {
         var errorMsg = "";

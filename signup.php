@@ -16,7 +16,6 @@
   <div>
       <?php
       if (isset($_POST['signup'])) {
-          echo 'isset entered.';
           $firstname = $_POST['firstName'];
           $surname = $_POST['lastName'];
           $email = $_POST['email'];
@@ -35,7 +34,6 @@
                         </script>";
               }
               else{
-                  echo"Entered else";
                   if ( !empty($firstname) && !empty($surname) && !empty($email) && !empty($password) &&
                       !empty($passwordConfirm) && !empty($birthday) && !empty($gender) && ($password == $passwordConfirm) ) {
 
@@ -50,7 +48,7 @@
                       $result = $stmtinsert->execute();
                       $stmtinsert->close();
                       if($result) {
-                          echo 'Successfully inserted new user.';
+                          //echo 'Successfully inserted new user.';
                       }
                       $getUserIDQuery = $mysqli->query("SELECT user_id FROM users ORDER BY user_id DESC LIMIT 1");
                       $row = $getUserIDQuery->fetch_assoc();
@@ -65,7 +63,7 @@
                               $result = $stmtinsert->execute();
                               $stmtinsert->close();
                               if ($result) {
-                                  echo 'Successfully inserted new librarian.';
+                                  //echo 'Successfully inserted new librarian.';
                               }
                               break;
                           case 'author' :
@@ -75,7 +73,7 @@
                               $result = $stmtinsert->execute();
                               $stmtinsert->close();
                               if ($result) {
-                                  echo 'Successfully inserted new author.';
+                                  //echo 'Successfully inserted new author.';
                               }
                               break;
                           case 'reader' :
@@ -85,7 +83,7 @@
                               $result = $stmtinsert->execute();
                               $stmtinsert->close();
                               if ($result) {
-                                  echo 'Successfully inserted new reader.';
+                                  //echo 'Successfully inserted new reader.';
                               }
                               break;
                       }
@@ -115,13 +113,13 @@
            placeholder="Email"
            style="margin-top: 5px;">
     <br></br>
-    <input type="text"
+    <input type="password"
            id="password"
            name="password"
            placeholder="Password"
            style="margin-top: 5px;">
     <br></br>
-    <input type="text"
+    <input type="password"
            id="confirmPassword"
            name="confirmPassword"
            placeholder="Confirm Password"
